@@ -1,0 +1,5 @@
+EF Commands Stratom
+
+dotnet ef --startup-project Stratom.Form.Api/Stratom.Form.Api.csproj migrations add InitialModel -p Stratom.Form.Data/Stratom.Form.Data.csproj
+
+dotnet ef --startup-project Stratom.Form.Api/Stratom.Form.Api.csproj database update
