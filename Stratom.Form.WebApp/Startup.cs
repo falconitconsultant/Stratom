@@ -15,7 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Stratom.Form.WebApp.Areas.Identity;
 using Stratom.Form.WebApp.Data;
-using Stratom.Form.DataAccessLayer;
 
 namespace Stratom.Form.WebApp
 {
@@ -36,8 +35,7 @@ namespace Stratom.Form.WebApp
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddEntityFrameworkStores<StratomDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();

@@ -25,4 +25,10 @@
     <Folder Include="Data\Migrations\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Stratom.Form.Core\Stratom.Form.Core.csproj" />
+    <ProjectReference Include="..\Stratom.Form.Data\Stratom.Form.Data.csproj" />
+    <ProjectReference Include="..\Stratom.Form.Services\Stratom.Form.Services.csproj" />
+  </ItemGroup>
+
 </Project>

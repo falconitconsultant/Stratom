@@ -3,19 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.BusinessLayer", "Stratom.Form.BusinessLayer\Stratom.Form.BusinessLayer.csproj", "{AA4A5AAD-F979-41BE-941C-7513610620FC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.DataAccessLayer", "Stratom.Form.DataAccessLayer\Stratom.Form.DataAccessLayer.csproj", "{EEF40A4F-0D4B-4631-B9CC-BF6DB680F226}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.Test", "Stratom.Form.Test\Stratom.Form.Test.csproj", "{2940260A-C7AD-40B1-B6A8-233A4C4C43A4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.WebApp", "Stratom.Form.WebApp\Stratom.Form.WebApp.csproj", "{467058DD-627E-46E5-8EDA-97C376E30E16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stratom.Form.Core", "Stratom.Form.Core\Stratom.Form.Core.csproj", "{ECD18A10-F806-45A1-9FFA-8EDD87B0946F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.Core", "Stratom.Form.Core\Stratom.Form.Core.csproj", "{ECD18A10-F806-45A1-9FFA-8EDD87B0946F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stratom.Form.Data", "Stratom.Form.Data\Stratom.Form.Data.csproj", "{4AB9E174-855D-4289-917A-EC4972E8945A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.Data", "Stratom.Form.Data\Stratom.Form.Data.csproj", "{4AB9E174-855D-4289-917A-EC4972E8945A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stratom.Form.Services", "Stratom.Form.Services\Stratom.Form.Services.csproj", "{E5B62021-2EF0-420A-B972-340A59B2D5CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.Services", "Stratom.Form.Services\Stratom.Form.Services.csproj", "{E5B62021-2EF0-420A-B972-340A59B2D5CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stratom.Form.Api", "Stratom.Form.Api\Stratom.Form.Api.csproj", "{BDA8FAEC-E48D-4B07-A65D-B3C0A50F9BEB}"
 EndProject
@@ -25,14 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AA4A5AAD-F979-41BE-941C-7513610620FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA4A5AAD-F979-41BE-941C-7513610620FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA4A5AAD-F979-41BE-941C-7513610620FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA4A5AAD-F979-41BE-941C-7513610620FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EEF40A4F-0D4B-4631-B9CC-BF6DB680F226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EEF40A4F-0D4B-4631-B9CC-BF6DB680F226}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EEF40A4F-0D4B-4631-B9CC-BF6DB680F226}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EEF40A4F-0D4B-4631-B9CC-BF6DB680F226}.Release|Any CPU.Build.0 = Release|Any CPU
 		{2940260A-C7AD-40B1-B6A8-233A4C4C43A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2940260A-C7AD-40B1-B6A8-233A4C4C43A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2940260A-C7AD-40B1-B6A8-233A4C4C43A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
