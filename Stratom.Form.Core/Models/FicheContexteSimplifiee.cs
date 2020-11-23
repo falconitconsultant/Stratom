@@ -20,5 +20,6 @@ namespace Stratom.Form.Core.Models
         public string ReductionsMontant { get; set; }
         public string ReductionsPeriode { get; set; }
         public string ReductionsAutre { get; set; }
+        //public int NumeroFiche { get; set; }
     }
 }

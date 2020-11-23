@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Stratom.Form.Core.Models;
 using Stratom.Form.Data.Configurations;
 using System;
@@ -7,7 +8,7 @@ using System.Text;
 
 namespace Stratom.Form.Data
 {
-    public class StratomFormDbContext : DbContext
+    public class StratomFormDbContext : IdentityDbContext
     {
         public DbSet<Fiche> Fiches { get; set; }
         public DbSet<Activite> Activites { get; set; }
@@ -29,6 +30,7 @@ namespace Stratom.Form.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            base.OnModelCreating(builder);
             builder.ApplyConfiguration(new ActiviteConfiguration());
             builder.ApplyConfiguration(new AssuranceDommageConfiguration());
             builder.ApplyConfiguration(new AssurancePersonneConfiguration());
