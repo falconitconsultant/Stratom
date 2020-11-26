@@ -12,7 +12,6 @@ namespace Stratom.Form.Data
     {
         private readonly StratomFormDbContext _context;
         private FicheRepository _ficheRepository;
-        private EtudiantRepository _etudiantRepository;
         private ActiviteTypeRepository _activiteTypeRepository;
         private ConcerneRepository _concerneRepository;
         private ActiviteRepository _activiteRepository;
@@ -31,8 +30,6 @@ namespace Stratom.Form.Data
         }
 
         public IFicheRepository Fiches => _ficheRepository ??= new FicheRepository(_context);
-
-        public IEtudiantRepository Etudiants => _etudiantRepository ??= new EtudiantRepository(_context);
 
         public IActiviteTypeRepository ActiviteTypes => _activiteTypeRepository ??= new ActiviteTypeRepository(_context);
 

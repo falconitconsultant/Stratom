@@ -16,6 +16,9 @@ using Microsoft.Extensions.Hosting;
 using Stratom.Form.WebApp.Areas.Identity;
 using Stratom.Form.WebApp.Data;
 using Stratom.Form.Data;
+using Stratom.Form.Core;
+using Stratom.Form.Core.Services;
+using Stratom.Form.Services.Services;
 
 namespace Stratom.Form.WebApp
 {
@@ -35,12 +38,17 @@ namespace Stratom.Form.WebApp
             services.AddDbContext<StratomFormDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<StratomFormDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddHttpClient<IFicheService, FicheService>(client => {
+                client.BaseAddress = new Uri("https://localhost:44376/");
+            });
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddControllersWithViews().AddNewtonsoftJson(options =>
+              options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            //services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

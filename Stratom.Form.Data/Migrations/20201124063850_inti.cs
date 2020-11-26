@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Stratom.Form.Data.Migrations
 {
-    public partial class identity_classes_added : Migration
+    public partial class inti : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -39,24 +39,14 @@ namespace Stratom.Form.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Discriminator = table.Column<string>(nullable: false),
+                    Nom = table.Column<string>(nullable: true),
+                    Prenom = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Fiches",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NumeroFiche = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Fiches", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,6 +153,26 @@ namespace Stratom.Form.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Fiches",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    NumeroFiche = table.Column<int>(type: "int", nullable: false),
+                    student_id = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Fiches", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Fiches_AspNetUsers_student_id",
+                        column: x => x.student_id,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -312,27 +322,6 @@ namespace Stratom.Form.Data.Migrations
                     table.PrimaryKey("PK_DescriptionsActivite", x => x.Id);
                     table.ForeignKey(
                         name: "FK_DescriptionsActivite_Fiches_FicheId",
-                        column: x => x.FicheId,
-                        principalTable: "Fiches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Etudiants",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FicheId = table.Column<int>(nullable: false),
-                    Nom = table.Column<string>(maxLength: 100, nullable: false),
-                    Prenom = table.Column<string>(maxLength: 100, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Etudiants", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Etudiants_Fiches_FicheId",
                         column: x => x.FicheId,
                         principalTable: "Fiches",
                         principalColumn: "Id",
@@ -532,9 +521,9 @@ namespace Stratom.Form.Data.Migrations
                 column: "FicheId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Etudiants_FicheId",
-                table: "Etudiants",
-                column: "FicheId");
+                name: "IX_Fiches_student_id",
+                table: "Fiches",
+                column: "student_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FichesClientProspect_FicheId",
@@ -596,9 +585,6 @@ namespace Stratom.Form.Data.Migrations
                 name: "DescriptionsActivite");
 
             migrationBuilder.DropTable(
-                name: "Etudiants");
-
-            migrationBuilder.DropTable(
                 name: "FichesClientProspect");
 
             migrationBuilder.DropTable(
@@ -614,10 +600,10 @@ namespace Stratom.Form.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Fiches");
 
             migrationBuilder.DropTable(
-                name: "Fiches");
+                name: "AspNetUsers");
         }
     }
 }

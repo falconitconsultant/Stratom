@@ -82,6 +82,10 @@ namespace Stratom.Form.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(256)")
                         .HasMaxLength(256);
@@ -133,6 +137,8 @@ namespace Stratom.Form.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -162,10 +168,12 @@ namespace Stratom.Form.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -202,10 +210,12 @@ namespace Stratom.Form.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(128)")
+                        .HasMaxLength(128);
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -414,35 +424,6 @@ namespace Stratom.Form.Data.Migrations
                     b.ToTable("DescriptionsActivite");
                 });
 
-            modelBuilder.Entity("Stratom.Form.Core.Models.Etudiant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FicheId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Nom")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Prenom")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FicheId");
-
-                    b.ToTable("Etudiants");
-                });
-
             modelBuilder.Entity("Stratom.Form.Core.Models.Fiche", b =>
                 {
                     b.Property<int>("Id")
@@ -455,7 +436,12 @@ namespace Stratom.Form.Data.Migrations
                     b.Property<int>("NumeroFiche")
                         .HasColumnType("int");
 
+                    b.Property<string>("student_id")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("student_id");
 
                     b.ToTable("Fiches");
                 });
@@ -683,6 +669,19 @@ namespace Stratom.Form.Data.Migrations
                     b.ToTable("Phases");
                 });
 
+            modelBuilder.Entity("Stratom.Form.Core.Models.ApplicationUser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<string>("Nom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Prenom")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("ApplicationUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -797,13 +796,11 @@ namespace Stratom.Form.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Stratom.Form.Core.Models.Etudiant", b =>
+            modelBuilder.Entity("Stratom.Form.Core.Models.Fiche", b =>
                 {
-                    b.HasOne("Stratom.Form.Core.Models.Fiche", "Fiche")
-                        .WithMany("Etudiants")
-                        .HasForeignKey("FicheId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Stratom.Form.Core.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("student_id");
                 });
 
             modelBuilder.Entity("Stratom.Form.Core.Models.FicheClientProspect", b =>

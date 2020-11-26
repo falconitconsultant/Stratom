@@ -41,7 +41,6 @@ namespace Stratom.Form.Api
             services.AddTransient<IConcerneService, ConcerneService>();
             services.AddTransient<IContratsPortefeuilleService, ContratsPortefeuilleService>();
             services.AddTransient<IDescriptionActiviteService, DescriptionActiviteService>();
-            services.AddTransient<IEtudiantService, EtudiantService>();
             services.AddTransient<IFicheClientProspectService, FicheClientProspectService>();
             services.AddTransient<IFicheContexteSimplifieeService, FicheContexteSimplifieeService>();
             services.AddTransient<IFicheFinService, FicheFinService>();

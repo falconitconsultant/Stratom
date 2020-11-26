@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Stratom.Form.Core.Models
 {    
@@ -9,7 +10,6 @@ namespace Stratom.Form.Core.Models
     {
         public Fiche()
         {
-            Etudiants                   = new Collection<Etudiant>();
             Activites                   = new Collection<Activite>();
             ActiviteTypes               = new Collection<ActiviteType>();
             Concernes                   = new Collection<Concerne>();
@@ -24,18 +24,20 @@ namespace Stratom.Form.Core.Models
         }
 
         public int Id { get; set; }
-        public int NumeroFiche { get; set; }                
-        public ICollection<Etudiant> Etudiants { get; set; }        
-        public ICollection<ActiviteType> ActiviteTypes { get; set; }                
-        public ICollection<Concerne> Concernes { get; set; }       
-        public ICollection<Activite> Activites { get; set; }        
-        public ICollection<AssurancePersonne> AssurancesPersonne { get; set; }                  
-        public ICollection<AssuranceDommage> AssurancesDommage { get; set; }       
-        public ICollection<FicheClientProspect> FichesClientProspect { get; set; }              
-        public ICollection<DescriptionActivite> DescriptionsActivite { get; set; }
-        public ICollection<FicheContexteSimplifiee> FichesContexteSimplifiee { get; set; }
-        public ICollection<ContratsPortefeuille> ContratsPortefeuilles { get; set; }
-        public ICollection<Phase> Phases { get; set; }        
-        public ICollection<FicheFin> FichesFin { get; set; }
+        public int NumeroFiche { get; set; }
+        public string student_id { get; set; }
+        [ForeignKey("student_id")]
+        public virtual ApplicationUser ApplicationUser { get; set; }
+        public virtual ICollection<ActiviteType> ActiviteTypes { get; set; }                
+        public virtual ICollection<Concerne> Concernes { get; set; }       
+        public virtual ICollection<Activite> Activites { get; set; }        
+        public virtual ICollection<AssurancePersonne> AssurancesPersonne { get; set; }                  
+        public virtual ICollection<AssuranceDommage> AssurancesDommage { get; set; }       
+        public virtual ICollection<FicheClientProspect> FichesClientProspect { get; set; }              
+        public virtual ICollection<DescriptionActivite> DescriptionsActivite { get; set; }
+        public virtual ICollection<FicheContexteSimplifiee> FichesContexteSimplifiee { get; set; }
+        public virtual ICollection<ContratsPortefeuille> ContratsPortefeuilles { get; set; }
+        public virtual ICollection<Phase> Phases { get; set; }        
+        public virtual ICollection<FicheFin> FichesFin { get; set; }
     }
 }

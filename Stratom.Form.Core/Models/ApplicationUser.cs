@@ -8,9 +8,6 @@ namespace Stratom.Form.Core.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        public int FicheId { get; set; }
-        [ForeignKey("FicheId")]
-        public Fiche Fiche { get; set; }
         public string Nom { get; set; }
         public string Prenom { get; set; }
     }

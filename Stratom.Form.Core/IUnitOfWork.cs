@@ -9,7 +9,6 @@ namespace Stratom.Form.Core
     public interface IUnitOfWork : IDisposable
     {
         IFicheRepository Fiches { get; }
-        IEtudiantRepository Etudiants { get; }
         IActiviteTypeRepository ActiviteTypes { get; }
         IConcerneRepository Concernes { get; }
         IActiviteRepository Activites { get; }

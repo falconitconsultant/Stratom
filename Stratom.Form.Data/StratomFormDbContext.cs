@@ -10,6 +10,7 @@ namespace Stratom.Form.Data
 {
     public class StratomFormDbContext : IdentityDbContext
     {
+        public DbSet<ApplicationUser> ApplicationUser { get; set; }
         public DbSet<Fiche> Fiches { get; set; }
         public DbSet<Activite> Activites { get; set; }
         public DbSet<ActiviteType> ActiviteTypes { get; set; }
@@ -18,7 +19,6 @@ namespace Stratom.Form.Data
         public DbSet<Concerne> Concernes { get; set; }
         public DbSet<ContratsPortefeuille> ContratsPortefeuilles { get; set; }
         public DbSet<DescriptionActivite> DescriptionsActivite { get; set; }
-        public DbSet<Etudiant> Etudiants { get; set; }
         public DbSet<FicheClientProspect> FichesClientProspect { get; set; }
         public DbSet<FicheContexteSimplifiee> FichesContexteSimplifiee { get; set; }
         public DbSet<FicheFin> FichesFin { get; set; }
@@ -27,7 +27,10 @@ namespace Stratom.Form.Data
         public StratomFormDbContext(DbContextOptions<StratomFormDbContext> options)
             : base(options)
         { }
+        public StratomFormDbContext()
+        {
 
+        }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -36,7 +39,6 @@ namespace Stratom.Form.Data
             builder.ApplyConfiguration(new AssurancePersonneConfiguration());
             builder.ApplyConfiguration(new ContratsPortefeuilleConfiguration());
             builder.ApplyConfiguration(new DescriptionActiviteConfiguration());
-            builder.ApplyConfiguration(new EtudiantConfiguration());
             builder.ApplyConfiguration(new FicheClientProspectConfiguration());
             builder.ApplyConfiguration(new FicheContexteSimplifieeConfiguration());
             builder.ApplyConfiguration(new FicheFinConfiguration()); 
