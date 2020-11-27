@@ -11,5 +11,6 @@ namespace Stratom.Form.Core.Repositories
         Task<IEnumerable<AssuranceDommage>> GetAllWithFichesAsync();
         Task<AssuranceDommage> GetWithFichesByIdAsync(int id);
         Task<IEnumerable<AssuranceDommage>> GetAllWithFicheByFicheIdAsync(int ficheId);
+        void Update(AssuranceDommage assuranceDommage);
     }
 }

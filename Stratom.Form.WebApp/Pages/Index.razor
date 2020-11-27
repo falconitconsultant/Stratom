@@ -1,15 +1,19 @@
 ﻿@page "/"
 @using Blazored.TextEditor
 @using Stratom.Form.Core.Models
+@using Stratom.Form.Core.ViewModel
 @using Stratom.Form.Core.Services
 @using System.Security.Claims
 @using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json;
+@using System.Text;
+@inject HttpClient Http
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IFicheService ficheService
 
-@if (fiche == null)
+@if (model == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>@msg</em></p>
 }
 else
 {
@@ -30,80 +34,82 @@ else
                 }
             </tbody>
         </table>*@
-    <h3>@NumeroFiche</h3>
+    @*<h3>@NumeroFiche</h3>*@
     <br>
     <br>
-    <label>Activities Table</label>
-    <input type="text" value="@activite.Souscription" class="form-control" placeholder="Souscription">
-    <input type="text" value="@activite.Autre" class="form-control" placeholder="Autre">
-    <br />
-    <label>Activite Type Table</label>
-    <input type="text" value="@activiteType.Libelle" class="form-control" placeholder="Libelle">
-    <br />
-    <label>Assurance Dommage Table</label>
-    <input type="text" value="@assuranceDommage.Autre" class="form-control" placeholder="Autre">
-    <input type="text" value="@assuranceDommage.Libelle" class="form-control" placeholder="Libelle">
-    <br />
-    <label>Assurance Personne Table</label>
-    <input type="text" value="@assurancePersonne.Libelle" class="form-control" placeholder="Libelle">
-    <input type="text" value="@assurancePersonne.Autre" class="form-control" placeholder="Autre">
-    <br />
-    <label>Concerne Personne Table</label>
-    <input type="text" value="@concerne.Libelle" class="form-control" placeholder="Libelle">
-    <br />
-    <label>Contrats Portefeuille Table</label>
-    <input type="text" value="@contratsPortefeuille.Type" class="form-control" placeholder="Type">
-    <input type="text" value="@contratsPortefeuille.Garantie" class="form-control" placeholder="Garantie">
-    <input type="Date" value="@contratsPortefeuille.DateSouscription" class="form-control" placeholder="Date">
-    <input type="text" value="@contratsPortefeuille.CotisationAnnuelle" class="form-control" placeholder="Cotisation Annuelle">
-    <input type="text" value="@contratsPortefeuille.Autre" class="form-control" placeholder="Autre">
-    <br />
-    <label>Description Activite Table</label>
-    <input type="text" value="@descriptionActivite.ContactOrigine" class="form-control" placeholder="Contact Origine">
-    <input type="text" value="@descriptionActivite.ContactFaceAFace" class="form-control" placeholder="Contact FaceAFace">
-    <input type="text" value="@descriptionActivite.ContactTelephone" class="form-control" placeholder="Contact Telephone">
-    <input type="text" value="@descriptionActivite.ContactRole" class="form-control" placeholder="Contact Role">
-    <input type="text" value="@descriptionActivite.EntretienObjectifs" class="form-control" placeholder="Entretien Objectifs">
-    <input type="text" value="@descriptionActivite.EntretienDeroulement" class="form-control" placeholder="Entretien Deroulement">
-    <br />
-    <label>Fiche Client Prospect Table</label>
-    <input type="text" value="@ficheClientProspect.Nom" class="form-control" placeholder="Nom">
-    <input type="text" value="@ficheClientProspect.Prenom" class="form-control" placeholder="Prenom">
-    <input type="text" value="@ficheClientProspect.Sexe" class="form-control" placeholder="Sexe">
-    <input type="number" value="@ficheClientProspect.Age" class="form-control" placeholder="Age">
-    <input type="text" value="@ficheClientProspect.Adresse" class="form-control" placeholder="Adresse">
-    <input type="number" value="@ficheClientProspect.CodePostal" class="form-control" placeholder="CodePostal">
-    <input type="text" value="@ficheClientProspect.Ville" class="form-control" placeholder="Ville">
-    <input type="number" value="@ficheClientProspect.Telephone" class="form-control" placeholder="Telephone">
-    <input type="number" value="@ficheClientProspect.Mobile" class="form-control" placeholder="Mobile">
-    <input type="text" value="@ficheClientProspect.Mail" class="form-control" placeholder="Mail">
-    <input type="text" value="@ficheClientProspect.Autre" class="form-control" placeholder="Autre">
-    <input type="text" value="@ficheClientProspect.SituationFamiliale" class="form-control" placeholder="SituationFamiliale">
-    <input type="text" value="@ficheClientProspect.NbEnfants" class="form-control" placeholder="NbEnfants">
-    <input type="number" value="@ficheClientProspect.AgesEnfants" class="form-control" placeholder="AgesEnfants">
-    <input type="text" value="@ficheClientProspect.SituationProfessionnelle" class="form-control" placeholder="SituationProfessionnelle">
-    <input type="checkbox" value="@ficheClientProspect.IsClient" class="form-control" placeholder="IsClient">
-    <input type="text" value="@ficheClientProspect.Statut" class="form-control" placeholder="Statut">
-    <input type="number" value="@ficheClientProspect.AgesEnfants" class="form-control" placeholder="AgesEnfants">
-    <input type="text" value="@ficheClientProspect.Anciennete" class="form-control" placeholder="Anciennete">
-    <input type="text" value="@ficheClientProspect.Revenus" class="form-control" placeholder="Revenus">
-    <input type="text" value="@ficheClientProspect.TauxImposition" class="form-control" placeholder="TauxImposition">
-    <input type="text" value="@ficheClientProspect.Placements" class="form-control" placeholder="Placements">
-    <br />
-    <label>Fiche Fin Table</label>
-    <input type="text" value="@ficheFin.InformationsAConserver" class="form-control" placeholder="InformationsAConserver">
-    <input type="text" value="@ficheFin.PlanificationActions" class="form-control" placeholder="PlanificationActions">
-    <input type="text" value="@ficheFin.AutoEvaluation" class="form-control" placeholder="AutoEvaluation">
-    <label>Phases Table</label>
-    <input type="text" value="@phase.PhaseContact" class="form-control" placeholder="PhaseContact">
-    <input type="text" value="@phase.PhaseDecouverte" class="form-control" placeholder="PhaseDecouverte">
-    <input type="text" value="@phase.PhaseTransition" class="form-control" placeholder="PhaseTransition">
-    <input type="text" value="@phase.PhaseVente" class="form-control" placeholder="PhaseVente">
-    <input type="text" value="@phase.PhaseConclusion" class="form-control" placeholder="PhaseConclusion">
-    <input type="text" value="@phase.PhaseAsseoirVente" class="form-control" placeholder="PhaseAsseoirVente">
-    <input type="text" value="@phase.PhasePriseConge" class="form-control" placeholder="PhasePriseConge">
+    <EditForm Model="@model" OnValidSubmit="@EditFinch">
+        <label>Activities Table</label>
+        <input type="text" @bind="@model.activite.Souscription" class="form-control" placeholder="Souscription">
+        <input type="text" @bind="@model.activite.Autre" class="form-control" placeholder="Autre">
+        <br />
+        <label>Activite Type Table</label>
+        <input type="text" @bind="@model.activiteType.Libelle" class="form-control" placeholder="Libelle">
+        <br />
+        <label>Assurance Dommage Table</label>
+        <input type="text" @bind="@model.assuranceDommage.Autre" class="form-control" placeholder="Autre">
+        <input type="text" @bind="@model.assuranceDommage.Libelle" class="form-control" placeholder="Libelle">
+        <br />
+        <label>Assurance Personne Table</label>
+        <input type="text" @bind="@model.assurancePersonne.Libelle" class="form-control" placeholder="Libelle">
+        <input type="text" @bind="@model.assurancePersonne.Autre" class="form-control" placeholder="Autre">
+        <br />
+        <label>Concerne Personne Table</label>
+        <input type="text" @bind="@model.concerne.Libelle" class="form-control" placeholder="Libelle">
+        <br />
+        <label>Contrats Portefeuille Table</label>
+        <input type="text" @bind="@model.contratsPortefeuille.Type" class="form-control" placeholder="Type">
+        <input type="text" @bind="@model.contratsPortefeuille.Garantie" class="form-control" placeholder="Garantie">
+        <input type="Date" @bind="@model.contratsPortefeuille.DateSouscription" class="form-control" placeholder="Date">
+        <input type="text" @bind="@model.contratsPortefeuille.CotisationAnnuelle" class="form-control" placeholder="Cotisation Annuelle">
+        <input type="text" @bind="@model.contratsPortefeuille.Autre" class="form-control" placeholder="Autre">
+        <br />
+        <label>Description Activite Table</label>
+        <input type="text" @bind="@model.descriptionActivite.ContactOrigine" class="form-control" placeholder="Contact Origine">
+        <input type="text" @bind="@model.descriptionActivite.ContactFaceAFace" class="form-control" placeholder="Contact FaceAFace">
+        <input type="text" @bind="@model.descriptionActivite.ContactTelephone" class="form-control" placeholder="Contact Telephone">
+        <input type="text" @bind="@model.descriptionActivite.ContactRole" class="form-control" placeholder="Contact Role">
+        <input type="text" @bind="@model.descriptionActivite.EntretienObjectifs" class="form-control" placeholder="Entretien Objectifs">
+        <input type="text" @bind="@model.descriptionActivite.EntretienDeroulement" class="form-control" placeholder="Entretien Deroulement">
+        <br />
+        <label>Fiche Client Prospect Table</label>
+        <input type="text" @bind="@model.ficheClientProspect.Nom" class="form-control" placeholder="Nom">
+        <input type="text" @bind="@model.ficheClientProspect.Prenom" class="form-control" placeholder="Prenom">
+        <input type="text" @bind="@model.ficheClientProspect.Sexe" class="form-control" placeholder="Sexe">
+        <input type="number" @bind="@model.ficheClientProspect.Age" class="form-control" placeholder="Age">
+        <input type="text" @bind="@model.ficheClientProspect.Adresse" class="form-control" placeholder="Adresse">
+        <input type="number" @bind="@model.ficheClientProspect.CodePostal" class="form-control" placeholder="CodePostal">
+        <input type="text" @bind="@model.ficheClientProspect.Ville" class="form-control" placeholder="Ville">
+        <input type="number" @bind="@model.ficheClientProspect.Telephone" class="form-control" placeholder="Telephone">
+        <input type="number" @bind="@model.ficheClientProspect.Mobile" class="form-control" placeholder="Mobile">
+        <input type="text" @bind="@model.ficheClientProspect.Mail" class="form-control" placeholder="Mail">
+        <input type="text" @bind="@model.ficheClientProspect.Autre" class="form-control" placeholder="Autre">
+        <input type="text" @bind="@model.ficheClientProspect.SituationFamiliale" class="form-control" placeholder="SituationFamiliale">
+        <input type="text" @bind="@model.ficheClientProspect.NbEnfants" class="form-control" placeholder="NbEnfants">
+        <input type="number" @bind="@model.ficheClientProspect.AgesEnfants" class="form-control" placeholder="AgesEnfants">
+        <input type="text" @bind="@model.ficheClientProspect.SituationProfessionnelle" class="form-control" placeholder="SituationProfessionnelle">
+        <input type="checkbox" @bind="@model.ficheClientProspect.IsClient" class="form-control" placeholder="IsClient">
+        <input type="text" @bind="@model.ficheClientProspect.Statut" class="form-control" placeholder="Statut">
+        <input type="number" @bind="@model.ficheClientProspect.AgesEnfants" class="form-control" placeholder="AgesEnfants">
+        <input type="text" @bind="@model.ficheClientProspect.Anciennete" class="form-control" placeholder="Anciennete">
+        <input type="text" @bind="@model.ficheClientProspect.Revenus" class="form-control" placeholder="Revenus">
+        <input type="text" @bind="@model.ficheClientProspect.TauxImposition" class="form-control" placeholder="TauxImposition">
+        <input type="text" @bind="@model.ficheClientProspect.Placements" class="form-control" placeholder="Placements">
+        <br />
+        <label>Fiche Fin Table</label>
+        <input type="text" @bind="@model.ficheFin.InformationsAConserver" class="form-control" placeholder="InformationsAConserver">
+        <input type="text" @bind="@model.ficheFin.PlanificationActions" class="form-control" placeholder="PlanificationActions">
+        <input type="text" @bind="@model.ficheFin.AutoEvaluation" class="form-control" placeholder="AutoEvaluation">
+        <label>Phases Table</label>
+        <input type="text" @bind="@model.phase.PhaseContact" class="form-control" placeholder="PhaseContact">
+        <input type="text" @bind="@model.phase.PhaseDecouverte" class="form-control" placeholder="PhaseDecouverte">
+        <input type="text" @bind="@model.phase.PhaseTransition" class="form-control" placeholder="PhaseTransition">
+        <input type="text" @bind="@model.phase.PhaseVente" class="form-control" placeholder="PhaseVente">
+        <input type="text" @bind="@model.phase.PhaseConclusion" class="form-control" placeholder="PhaseConclusion">
+        <input type="text" @bind="@model.phase.PhaseAsseoirVente" class="form-control" placeholder="PhaseAsseoirVente">
+        <input type="text" @bind="@model.phase.PhasePriseConge" class="form-control" placeholder="PhasePriseConge">
 
-
+        <button type="submit">Edit</button>
+    </EditForm>
 }
 
 
@@ -122,28 +128,67 @@ else
     public FicheFin ficheFin { get; set; }
     public Phase phase { get; set; }
     public Fiche fiche { get; set; }
+    public MainViewModel model { get; set; }
     public string NumeroFiche { get; set; }
+    public string msg { get; set; }
     protected override async Task OnInitializedAsync()
     {
         var principal = HttpContextAccessor.HttpContext.User;
         var loggedInUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
         //fiche = new IEnumerable<Fiche>();
-        ficheList = (await ficheService.GetAllFiches()).ToList();
-        fiche = ficheList.FirstOrDefault(x => x.student_id == loggedInUserId);
-        NumeroFiche = "Document No. " + fiche.NumeroFiche;
-        //Set Models
-        activite = fiche.Activites.FirstOrDefault();
-        activiteType = fiche.ActiviteTypes.FirstOrDefault();
-        assuranceDommage = fiche.AssurancesDommage.FirstOrDefault();
-        assurancePersonne = fiche.AssurancesPersonne.FirstOrDefault();
-        concerne = fiche.Concernes.FirstOrDefault();
-        contratsPortefeuille = fiche.ContratsPortefeuilles.FirstOrDefault();
-        descriptionActivite = fiche.DescriptionsActivite.FirstOrDefault();
-        ficheClientProspect = fiche.FichesClientProspect.FirstOrDefault();
-        ficheContexteSimplifiee = fiche.FichesContexteSimplifiee.FirstOrDefault();
-        ficheFin = fiche.FichesFin.FirstOrDefault();
-        phase = fiche.Phases.FirstOrDefault();
-        await base.OnInitializedAsync();
+        if (loggedInUserId != null)
+        {
+            try
+            {
+                model = (await ficheService.GetAllFichesInViewModel(loggedInUserId));
+                fiche = ficheList.FirstOrDefault(x => x.student_id == loggedInUserId);
+                NumeroFiche = "Document No. " + fiche.NumeroFiche;
+                //Set Models
+                //activite = fiche.Activites.FirstOrDefault();
+                //activiteType = fiche.ActiviteTypes.FirstOrDefault();
+                //assuranceDommage = fiche.AssurancesDommage.FirstOrDefault();
+                //assurancePersonne = fiche.AssurancesPersonne.FirstOrDefault();
+                //concerne = fiche.Concernes.FirstOrDefault();
+                //contratsPortefeuille = fiche.ContratsPortefeuilles.FirstOrDefault();
+                //descriptionActivite = fiche.DescriptionsActivite.FirstOrDefault();
+                //ficheClientProspect = fiche.FichesClientProspect.FirstOrDefault();
+                //ficheContexteSimplifiee = fiche.FichesContexteSimplifiee.FirstOrDefault();
+                //ficheFin = fiche.FichesFin.FirstOrDefault();
+                //phase = fiche.Phases.FirstOrDefault();
+                await base.OnInitializedAsync();
+            }
+            catch (Exception)
+            {
+                msg = "Something went wrong";
+            }
+
+        }
+        else
+        {
+            msg = "Please sign in";
+        }
+    }
+    async Task EditFinch()
+    {
+
+        try
+        {
+            //CommandResponse response;
+            //model.activite = activite;
+            //await  Http.SendJsonAsync(HttpMethod.Post, "https://localhost:44376/api/Fiches/Update", model);
+            //var serialized = JsonConvert.SerializeObject(model);
+            //var stringContent = new StringContent(serialized, Encoding.UTF8, "application/json");
+            //await Http.PostAsync("https://localhost:44376/api/Fiches/Update", stringContent);
+            //var request = new CommandRequest() //{RequestNumber = 3};
+            //var test = Storage.GetItem("environment_uri") + "/api/Fiches/Update";
+            await Http.SendJsonAsync(HttpMethod.Post,  "https://localhost:44376/api/Fiches/Update", model);
+            //await Http.SendJsonAsync<MainViewModel>(HttpMethod.Post, "api/Fiches/Update", model);
+        }
+        catch (Exception ex)
+        {
+
+        }
+
     }
 
 }

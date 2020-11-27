@@ -11,5 +11,6 @@ namespace Stratom.Form.Core.Repositories
         Task<IEnumerable<ActiviteType>> GetAllWithFichesAsync();
         Task<ActiviteType> GetWithFichesByIdAsync(int id);
         Task<IEnumerable<ActiviteType>> GetAllWithFicheByFicheIdAsync(int ficheId);
+        void Update(ActiviteType activiteType);
     }
 }

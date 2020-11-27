@@ -34,5 +34,13 @@ namespace Stratom.Form.Data.Repositories
         {
             return await StratomFormDbContext.FichesFin.Include(m => m.Fiche).Where(m => m.FicheId == ficheId).ToListAsync();
         }
+        public void Update(FicheFin ficheFin)
+        {
+            var objFromDb = StratomFormDbContext.FichesFin.FirstOrDefault(c => c.Id == ficheFin.Id);
+            objFromDb.InformationsAConserver = ficheFin.InformationsAConserver;
+            objFromDb.PlanificationActions = ficheFin.PlanificationActions;
+            objFromDb.AutoEvaluation = ficheFin.AutoEvaluation;
+            StratomFormDbContext.SaveChanges();
+        }
     }
 }

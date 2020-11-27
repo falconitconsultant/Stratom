@@ -19,6 +19,7 @@ using Stratom.Form.Data;
 using Stratom.Form.Core;
 using Stratom.Form.Core.Services;
 using Stratom.Form.Services.Services;
+using System.Net.Http;
 
 namespace Stratom.Form.WebApp
 {
@@ -42,10 +43,12 @@ namespace Stratom.Form.WebApp
                 .AddEntityFrameworkStores<StratomFormDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddScoped<HttpClient>();
             services.AddHttpClient<IFicheService, FicheService>(client => {
                 client.BaseAddress = new Uri("https://localhost:44376/");
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
               options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             //services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();

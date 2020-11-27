@@ -2,6 +2,7 @@
 using Stratom.Form.Core;
 using Stratom.Form.Core.Models;
 using Stratom.Form.Core.Services;
+using Stratom.Form.Core.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -25,7 +26,14 @@ namespace Stratom.Form.Services.Services
             return await _httpClient.GetJsonAsync<Fiche[]>("api/Fiches");
             //return await _unitOfWork.Fiches.GetAllAsync();
         }
-
+        public async Task<MainViewModel> GetAllFichesInViewModel(string id)
+        {
+            //MainViewModel model = new MainViewModel();
+            //Fiche fiche = await _unitOfWork.Fiches.GetAllFichesByStudentId(id);
+            //model.fiche = fiche;
+            //return model;
+            return await _httpClient.GetJsonAsync<MainViewModel>("api/Fiches/?id="+ id);
+        }
         public async Task<Fiche> GetFicheById(int id)
         {
             return await _unitOfWork.Fiches.GetAllByIdAsync(id);

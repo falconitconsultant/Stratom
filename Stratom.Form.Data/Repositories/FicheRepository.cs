@@ -54,7 +54,30 @@ namespace Stratom.Form.Data.Repositories
                 .Include(m => m.Phases)
                 .SingleOrDefaultAsync(m => m.Id == id);
         }
+        public async Task<Fiche> GetAllFichesByStudentId(string id)
+        {
+            try
+            {
+                return await StratomFormDbContext.Fiches
+                .Include(m => m.Activites)
+                .Include(m => m.ActiviteTypes)
+                .Include(m => m.AssurancesDommage)
+                .Include(m => m.AssurancesPersonne)
+                .Include(m => m.Concernes)
+                .Include(m => m.ContratsPortefeuilles)  
+                .Include(m => m.DescriptionsActivite)
+                .Include(m => m.FichesClientProspect)
+                .Include(m => m.FichesContexteSimplifiee)
+                .Include(m => m.FichesFin)
+                .Include(m => m.Phases)
+                .SingleOrDefaultAsync(m => m.student_id == id);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
 
+        }
         public async Task<Fiche> GetAllByNumeroFicheAsync(int etudiantId, int numeroFiche)
         {
             return await StratomFormDbContext.Fiches

@@ -10,6 +10,7 @@ namespace Stratom.Form.Core.Repositories
     {
         Task<IEnumerable<Fiche>> GetAllFichesAsync();
         Task<Fiche> GetAllByIdAsync(int id);
+        Task<Fiche> GetAllFichesByStudentId(string id);
         Task<Fiche> GetAllByNumeroFicheAsync(int etudiantId, int numeroFiche);
         Task<IEnumerable<Fiche>> GetAllByEtudiantIdAsync(int etudiantId);
 

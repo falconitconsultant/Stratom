@@ -34,5 +34,17 @@ namespace Stratom.Form.Data.Repositories
         {
             return await StratomFormDbContext.Phases.Include(m => m.Fiche).Where(m => m.FicheId == ficheId).ToListAsync();
         }
+        public void Update(Phase phase)
+        {
+            var objFromDb = StratomFormDbContext.Phases.FirstOrDefault(c => c.Id == phase.Id);
+            objFromDb.PhaseContact = phase.PhaseContact;
+            objFromDb.PhaseDecouverte = phase.PhaseDecouverte;
+            objFromDb.PhaseTransition = phase.PhaseTransition;
+            objFromDb.PhaseVente = phase.PhaseVente;
+            objFromDb.PhaseConclusion = phase.PhaseConclusion;
+            objFromDb.PhaseAsseoirVente = phase.PhaseAsseoirVente;
+            objFromDb.PhasePriseConge = phase.PhasePriseConge;
+            StratomFormDbContext.SaveChanges();
+        }
     }
 }
