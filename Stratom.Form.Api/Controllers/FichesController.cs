@@ -61,29 +61,27 @@ namespace Stratom.Form.Api.Controllers
         }
         //[Route("api/Employee/Update")]
         //[HttpPost]
-        [HttpPost("[action]")]
-        public void Update([FromBody] MainViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.ActiviteTypes.Update(model.activiteType);
-                _unitOfWork.AssurancesDommage.Update(model.assuranceDommage);
-                _unitOfWork.AssurancesPersonne.Update(model.assurancePersonne);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.Activites.Update(model.activite);
-                _unitOfWork.CommitAsync();
-            }
+        //[HttpPost("[action]")]
+        //public void Update([FromBody] MainViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _unitOfWork.Activites.Update(model.activite);
+        //        _unitOfWork.ActiviteTypes.Update(model.activiteType);
+        //        _unitOfWork.AssurancesDommage.Update(model.assuranceDommage);
+        //        _unitOfWork.AssurancesPersonne.Update(model.assurancePersonne);
+        //        _unitOfWork.Concernes.Update(model.concerne);
+        //        _unitOfWork.ContratsPortefeuilles.Update(model.contratsPortefeuille);
+        //        _unitOfWork.DescriptionsActivite.Update(model.descriptionActivite);
+        //        _unitOfWork.Fiches.Update(model.fiche);
+        //        _unitOfWork.FichesClientProspect.Update(model.ficheClientProspect);
+        //        _unitOfWork.FichesContexteSimplifiee.Update(model.ficheContexteSimplifiee);
+        //        _unitOfWork.FichesFin.Update(model.ficheFin);
+        //        _unitOfWork.Phases.Update(model.phase);
+        //        _unitOfWork.CommitAsync();
+        //    }
 
-        }
+        //}
         // POST: api/Fiches
         [HttpPost]
         public void Post([FromBody] string value)
@@ -91,9 +89,25 @@ namespace Stratom.Form.Api.Controllers
         }
 
         // PUT: api/Fiches/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{id}")]//[HttpPut("{id}")]
+        public void Update(int id, [FromBody] MainViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Activites.Update(model.activite);
+                _unitOfWork.ActiviteTypes.Update(model.activiteType);
+                _unitOfWork.AssurancesDommage.Update(model.assuranceDommage);
+                _unitOfWork.AssurancesPersonne.Update(model.assurancePersonne);
+                _unitOfWork.Concernes.Update(model.concerne);
+                _unitOfWork.ContratsPortefeuilles.Update(model.contratsPortefeuille);
+                _unitOfWork.DescriptionsActivite.Update(model.descriptionActivite);
+                _unitOfWork.Fiches.Update(model.fiche);
+                _unitOfWork.FichesClientProspect.Update(model.ficheClientProspect);
+                _unitOfWork.FichesContexteSimplifiee.Update(model.ficheContexteSimplifiee);
+                _unitOfWork.FichesFin.Update(model.ficheFin);
+                _unitOfWork.Phases.Update(model.phase);
+                _unitOfWork.CommitAsync();
+            }
         }
 
         // DELETE: api/ApiWithActions/5

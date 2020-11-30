@@ -13,7 +13,7 @@ namespace Stratom.Form.Core.Repositories
         Task<Fiche> GetAllFichesByStudentId(string id);
         Task<Fiche> GetAllByNumeroFicheAsync(int etudiantId, int numeroFiche);
         Task<IEnumerable<Fiche>> GetAllByEtudiantIdAsync(int etudiantId);
-
+        void Update(Fiche fiche);
         //Not needed atm
         //Task<IEnumerable<Fiche>> GetAllByActiviteTypeIdAsync(int activiteTypeId);
         //Task<IEnumerable<Fiche>> GetAllByConcerneIdAsync(int concerneId);

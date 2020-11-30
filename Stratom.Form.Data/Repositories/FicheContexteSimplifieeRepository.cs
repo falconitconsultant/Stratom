@@ -34,5 +34,22 @@ namespace Stratom.Form.Data.Repositories
         {
             return await StratomFormDbContext.FichesContexteSimplifiee.Include(m => m.Fiche).Where(m => m.FicheId == ficheId).ToListAsync();
         }
+
+        public void Update(FicheContexteSimplifiee ficheContexteSimplifiee)
+        {
+            var objFromDb = StratomFormDbContext.FichesContexteSimplifiee.FirstOrDefault(c => c.Id == ficheContexteSimplifiee.Id);
+            objFromDb.EntrepriseNom = ficheContexteSimplifiee.EntrepriseNom;
+            objFromDb.CompagnieMandante = ficheContexteSimplifiee.CompagnieMandante;
+            objFromDb.Historique = ficheContexteSimplifiee.Historique;
+            objFromDb.PresentationPortefeuilleClients = ficheContexteSimplifiee.PresentationPortefeuilleClients;
+            objFromDb.ActivitesEntreprise = ficheContexteSimplifiee.ActivitesEntreprise;
+            objFromDb.Cible = ficheContexteSimplifiee.Cible;
+            objFromDb.ActionsCommerciales = ficheContexteSimplifiee.ActionsCommerciales;
+            objFromDb.ReductionsNature = ficheContexteSimplifiee.ReductionsNature;
+            objFromDb.ReductionsMontant = ficheContexteSimplifiee.ReductionsMontant;
+            objFromDb.ReductionsPeriode = ficheContexteSimplifiee.ReductionsPeriode;
+            objFromDb.ReductionsAutre = ficheContexteSimplifiee.ReductionsAutre;
+            StratomFormDbContext.SaveChanges();
+        }
     }
 }

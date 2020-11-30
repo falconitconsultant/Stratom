@@ -181,7 +181,8 @@ else
             //await Http.PostAsync("https://localhost:44376/api/Fiches/Update", stringContent);
             //var request = new CommandRequest() //{RequestNumber = 3};
             //var test = Storage.GetItem("environment_uri") + "/api/Fiches/Update";
-            await Http.SendJsonAsync(HttpMethod.Post,  "https://localhost:44376/api/Fiches/Update", model);
+            //await Http.SendJsonAsync(HttpMethod.Post,  "https://localhost:44376/api/Fiches/Update", model);
+            await Http.SendJsonAsync(HttpMethod.Put,  "https://localhost:44376/api/Fiches/"+model.fiche.Id, model);
             //await Http.SendJsonAsync<MainViewModel>(HttpMethod.Post, "api/Fiches/Update", model);
         }
         catch (Exception ex)

@@ -37,13 +37,11 @@ namespace Stratom.Form.Data.Repositories
         public void Update(ContratsPortefeuille contratsPortefeuille)
         {
             var objFromDb = StratomFormDbContext.ContratsPortefeuilles.FirstOrDefault(c => c.Id == contratsPortefeuille.Id);
-            //objFromDb.PhaseContact = contratsPortefeuille.PhaseContact;
-            //objFromDb.PhaseDecouverte = contratsPortefeuille.PhaseDecouverte;
-            //objFromDb.PhaseTransition = contratsPortefeuille.PhaseTransition;
-            //objFromDb.PhaseVente = contratsPortefeuille.PhaseVente;
-            //objFromDb.PhaseConclusion = contratsPortefeuille.PhaseConclusion;
-            //objFromDb.PhaseAsseoirVente = contratsPortefeuille.PhaseAsseoirVente;
-            //objFromDb.PhasePriseConge = contratsPortefeuille.PhasePriseConge;
+            objFromDb.Type = contratsPortefeuille.Type;
+            objFromDb.Garantie = contratsPortefeuille.Garantie;
+            objFromDb.DateSouscription = contratsPortefeuille.DateSouscription;
+            objFromDb.CotisationAnnuelle = contratsPortefeuille.CotisationAnnuelle;
+            objFromDb.Autre = contratsPortefeuille.Autre;
             StratomFormDbContext.SaveChanges();
         }
     }

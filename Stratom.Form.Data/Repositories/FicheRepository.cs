@@ -111,5 +111,12 @@ namespace Stratom.Form.Data.Repositories
                 .Include(m => m.Phases)
                 .ToListAsync();
         }
+
+        public void Update(Fiche fiche)
+        {
+            var objFromDb = StratomFormDbContext.Fiches.FirstOrDefault(c => c.Id == fiche.Id);
+            objFromDb.NumeroFiche = fiche.NumeroFiche;
+            StratomFormDbContext.SaveChanges();
+        }
     }
 }

@@ -34,5 +34,13 @@ namespace Stratom.Form.Data.Repositories
         {
             return await StratomFormDbContext.AssurancesDommage.Include(m => m.Fiche).SingleOrDefaultAsync(m => m.Id == id);
         }
+
+        public void Update(AssuranceDommage assuranceDommage)
+        {
+            var objFromDb = StratomFormDbContext.AssurancesDommage.FirstOrDefault(c => c.Id == assuranceDommage.Id);
+            objFromDb.Libelle = assuranceDommage.Libelle;
+            objFromDb.Autre = assuranceDommage.Autre;
+            StratomFormDbContext.SaveChanges();
+        }
     }
 }
