@@ -12,5 +12,6 @@ namespace ApplicationServices.Business.AppServices.IAppServices
         Task<DescriptionsActivite> GetWithFichesByIdAsync(int id);
         Task<IEnumerable<DescriptionsActivite>> GetAllWithFicheByFicheIdAsync(int ficheId);
         void Update(DescriptionsActivite descriptionActivite);
+        void Add(DescriptionsActivite descriptionActivite);
     }
 }

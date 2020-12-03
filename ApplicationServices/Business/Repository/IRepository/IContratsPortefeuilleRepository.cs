@@ -12,5 +12,6 @@ namespace ApplicationServices.Business.AppServices.IAppServices
         Task<ContratsPortefeuilles> GetWithFichesByIdAsync(int id);
         Task<IEnumerable<ContratsPortefeuilles>> GetAllWithFicheByFicheIdAsync(int ficheId);
         void Update(ContratsPortefeuilles contratsPortefeuille);
+        void Add(ContratsPortefeuilles contratsPortefeuille);
     }
 }

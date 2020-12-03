@@ -140,5 +140,10 @@ namespace ApplicationServices.Business.AppServices
             objFromDb.NumeroFiche = fiche.NumeroFiche;
             StratomContext.SaveChanges();
         }
+        public void Add(Fiches fiche)
+        {
+            StratomContext.Fiches.Add(fiche);
+            StratomContext.SaveChanges();
+        }
     }
 }

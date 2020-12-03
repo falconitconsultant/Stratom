@@ -28,6 +28,10 @@ namespace Domain.Entities
         public string Revenus { get; set; }
         public string TauxImposition { get; set; }
         public string Placements { get; set; }
+        public string ContratsType { get; set; }
+        public string ContratsGarantie { get; set; }
+        public DateTime ContratsDateSouscription { get; set; }
+        public string ContratsAnnualSubscription { get; set; }
 
         public virtual Fiches Fiche { get; set; }
     }

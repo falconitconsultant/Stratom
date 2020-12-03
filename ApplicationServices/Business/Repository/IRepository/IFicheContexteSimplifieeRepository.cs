@@ -12,5 +12,6 @@ namespace ApplicationServices.Business.AppServices.IAppServices
         Task<FichesContexteSimplifiee> GetWithFichesByIdAsync(int id);
         Task<IEnumerable<FichesContexteSimplifiee>> GetAllWithFicheByFicheIdAsync(int ficheId);
         void Update(FichesContexteSimplifiee ficheContexteSimplifiee);
+        void Add(FichesContexteSimplifiee ficheContexteSimplifiee);
     }
 }

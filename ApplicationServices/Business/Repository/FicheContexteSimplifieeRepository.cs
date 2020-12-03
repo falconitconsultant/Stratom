@@ -52,5 +52,11 @@ namespace ApplicationServices.Business.AppServices
             objFromDb.ReductionsAutre = ficheContexteSimplifiee.ReductionsAutre;
             StratomContext.SaveChanges();
         }
+
+        public void Add(FichesContexteSimplifiee ficheContexteSimplifiee)
+        {
+            StratomContext.FichesContexteSimplifiee.Add(ficheContexteSimplifiee);
+            StratomContext.SaveChanges();
+        }
     }
 }

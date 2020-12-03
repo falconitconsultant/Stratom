@@ -35,7 +35,7 @@ namespace StratomApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IFicheService, FicheService>();
+            //services.AddTransient<IFicheService, FicheService>();
             services.AddTransient<IActiviteService, ActiviteService>();
             services.AddTransient<IActiviteTypeService, ActiviteTypeService>();
             services.AddTransient<IAssuranceDommageService, AssuranceDommageService>();

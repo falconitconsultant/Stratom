@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistance;
 
 namespace Persistance.Migrations
 {
     [DbContext(typeof(StratomContext))]
-    partial class StratomContextModelSnapshot : ModelSnapshot
+    [Migration("20201203062218_added_fields_in_FichesClientProspect")]
+    partial class added_fields_in_FichesClientProspect
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,6 +164,10 @@ namespace Persistance.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("ContactFaceAface")
+                        .HasColumnName("ContactFaceAFace")
+                        .HasColumnType("text");
+
                     b.Property<string>("ContactFonction")
                         .HasColumnType("text");
 
@@ -179,9 +185,6 @@ namespace Persistance.Migrations
 
                     b.Property<int>("FicheId")
                         .HasColumnType("int");
-
-                    b.Property<string>("FormOfCommunication")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

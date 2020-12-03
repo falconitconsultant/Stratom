@@ -45,5 +45,11 @@ namespace ApplicationServices.Business.AppServices
             objFromDb.Autre = contratsPortefeuille.Autre;
             StratomContext.SaveChanges();
         }
+
+        public void Add(ContratsPortefeuilles contratsPortefeuille)
+        {
+            StratomContext.ContratsPortefeuilles.Add(contratsPortefeuille);
+            StratomContext.SaveChanges();
+        }
     }
 }

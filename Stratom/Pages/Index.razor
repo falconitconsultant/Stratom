@@ -9,11 +9,17 @@
 @inject HttpClient Http
 @inject IHttpContextAccessor HttpContextAccessor
 @inject IFicheService ficheService
+@inject IJSRuntime JSRuntime
+@using Blazored.TextEditor
+@using Stratom.Helper
 <style>
-    [type="checkbox"]
-{
-    vertical-align:middle;
-}
+    [type="checkbox"] {
+        vertical-align: middle;
+    }
+
+    .documentLabels {
+        color: blue;
+    }
 </style>
 @if (model == null)
 {
@@ -61,7 +67,7 @@ else
                     var Value = item.Id;
                     bool Checked = false;
                     @*<input type="checkbox" checked=@Checked
-                @onchange="eventArgs => { CheckboxClicked(Value, eventArgs.Value); }" />*@
+                    @onchange="eventArgs => { CheckboxClicked(Value, eventArgs.Value); }" />*@
                     <input type="checkbox" checked=@Checked value="@Text" />
                     @Text
                 }
@@ -73,7 +79,8 @@ else
             <option>--select--</option>
             @foreach (var item in model.activite)
             {
-                <option value="@item.Souscription">@item.Souscription</option>//@onchange="eventArgs => { CheckboxClicked(item.Souscription, eventArgs.Value); }"
+                <option value="@item.Souscription">@item.Souscription</option>
+                //@onchange="eventArgs => { CheckboxClicked(item.Souscription, eventArgs.Value); }"
                 // Blazor needs to know what values it binds to!
             }
         </select>
@@ -102,6 +109,11 @@ else
                         <input disabled="@Foresight" type="checkbox" checked=@Checked value="item.Libelle" />
                         @item.Libelle
                     }
+                    else if (item.Libelle.Equals("Ass Vie, produit épargne"))
+                    {
+                        <input disabled="@SavingsProduct" type="checkbox" checked=@Checked value="item.Libelle" />
+                        @item.Libelle
+                    }
                     else
                     {
                         <input disabled type="checkbox" checked=@Checked value="item.Libelle" />
@@ -119,96 +131,570 @@ else
             {
                 foreach (var item in model.assuranceDommage)
                 {
-                    var Text = item.Libelle;
-                    var Value = item.Id;
                     bool Checked = false;
-                    <input disabled type="checkbox" checked=@Checked value="@Text" />
-                    @Text
+                    if (item.Libelle.Equals("Automobile"))
+                    {
+                        <input disabled="@Automobile" type="checkbox" checked=@Checked value="@item.Libelle" />
+                        @item.Libelle
+                    }
+                    else if (item.Libelle.Equals("MRH") || item.Libelle.Equals("MRPro"))
+                    {
+                        <input disabled="@MRH" type="checkbox" checked=@Checked value="@item.Libelle" />
+                        @item.Libelle
+                    }
+                    else
+                    {
+                        <input disabled type="checkbox" checked=@Checked value="@item.Libelle" />
+                        @item.Libelle
+                    }
+
                 }
             }
         </label>
         <br />
-        
-        @*<label>Activities Table</label>
-        <input type="text" @bind="@model.activite.Souscription" class="form-control" placeholder="Souscription">
-        <input type="text" @bind="@model.activite.Autre" class="form-control" placeholder="Autre">
-        <br />
-        <label>Activite Type Table</label>
-        <input type="text" @bind="@model.activiteType.Libelle" class="form-control" placeholder="Libelle">
-        <br />
-        <label>Assurance Dommage Table</label>
-        <input type="text" @bind="@model.assuranceDommage.Autre" class="form-control" placeholder="Autre">
-        <input type="text" @bind="@model.assuranceDommage.Libelle" class="form-control" placeholder="Libelle">
-        <br />
-        <label>Assurance Personne Table</label>
-        <input type="text" @bind="@model.assurancePersonne.Libelle" class="form-control" placeholder="Libelle">
-        <input type="text" @bind="@model.assurancePersonne.Autre" class="form-control" placeholder="Autre">
-        <br />
-        <label>Concerne Personne Table</label>
-        <input type="text" @bind="@model.concerne.Libelle" class="form-control" placeholder="Libelle">
-        <br />
-        <label>Contrats Portefeuille Table</label>
-        <input type="text" @bind="@model.contratsPortefeuille.Type" class="form-control" placeholder="Type">
-        <input type="text" @bind="@model.contratsPortefeuille.Garantie" class="form-control" placeholder="Garantie">
-        <input type="Date" @bind="@model.contratsPortefeuille.DateSouscription" class="form-control" placeholder="Date">
-        <input type="text" @bind="@model.contratsPortefeuille.CotisationAnnuelle" class="form-control" placeholder="Cotisation Annuelle">
-        <input type="text" @bind="@model.contratsPortefeuille.Autre" class="form-control" placeholder="Autre">
-        <br />
-        <label>Description Activite Table</label>
-        <input type="text" @bind="@model.descriptionActivite.ContactOrigine" class="form-control" placeholder="Contact Origine">
-        <input type="text" @bind="@model.descriptionActivite.ContactFaceAFace" class="form-control" placeholder="Contact FaceAFace">
-        <input type="text" @bind="@model.descriptionActivite.ContactTelephone" class="form-control" placeholder="Contact Telephone">
-        <input type="text" @bind="@model.descriptionActivite.ContactRole" class="form-control" placeholder="Contact Role">
-        <input type="text" @bind="@model.descriptionActivite.EntretienObjectifs" class="form-control" placeholder="Entretien Objectifs">
-        <input type="text" @bind="@model.descriptionActivite.EntretienDeroulement" class="form-control" placeholder="Entretien Deroulement">
-        <br />
-        <label>Fiche Client Prospect Table</label>
-        <input type="text" @bind="@model.ficheClientProspect.Nom" class="form-control" placeholder="Nom">
-        <input type="text" @bind="@model.ficheClientProspect.Prenom" class="form-control" placeholder="Prenom">
-        <input type="text" @bind="@model.ficheClientProspect.Sexe" class="form-control" placeholder="Sexe">
-        <input type="number" @bind="@model.ficheClientProspect.Age" class="form-control" placeholder="Age">
-        <input type="text" @bind="@model.ficheClientProspect.Adresse" class="form-control" placeholder="Adresse">
-        <input type="number" @bind="@model.ficheClientProspect.CodePostal" class="form-control" placeholder="CodePostal">
-        <input type="text" @bind="@model.ficheClientProspect.Ville" class="form-control" placeholder="Ville">
-        <input type="number" @bind="@model.ficheClientProspect.Telephone" class="form-control" placeholder="Telephone">
-        <input type="number" @bind="@model.ficheClientProspect.Mobile" class="form-control" placeholder="Mobile">
-        <input type="text" @bind="@model.ficheClientProspect.Mail" class="form-control" placeholder="Mail">
-        <input type="text" @bind="@model.ficheClientProspect.Autre" class="form-control" placeholder="Autre">
-        <input type="text" @bind="@model.ficheClientProspect.SituationFamiliale" class="form-control" placeholder="SituationFamiliale">
-        <input type="text" @bind="@model.ficheClientProspect.NbEnfants" class="form-control" placeholder="NbEnfants">
-        <input type="number" @bind="@model.ficheClientProspect.AgesEnfants" class="form-control" placeholder="AgesEnfants">
-        <input type="text" @bind="@model.ficheClientProspect.SituationProfessionnelle" class="form-control" placeholder="SituationProfessionnelle">
-        <input type="checkbox" @bind="@model.ficheClientProspect.IsClient" class="form-control" placeholder="IsClient">
-        <input type="text" @bind="@model.ficheClientProspect.Statut" class="form-control" placeholder="Statut">
-        <input type="number" @bind="@model.ficheClientProspect.AgesEnfants" class="form-control" placeholder="AgesEnfants">
-        <input type="text" @bind="@model.ficheClientProspect.Anciennete" class="form-control" placeholder="Anciennete">
-        <input type="text" @bind="@model.ficheClientProspect.Revenus" class="form-control" placeholder="Revenus">
-        <input type="text" @bind="@model.ficheClientProspect.TauxImposition" class="form-control" placeholder="TauxImposition">
-        <input type="text" @bind="@model.ficheClientProspect.Placements" class="form-control" placeholder="Placements">
-        <br />
-        <label>Fiche Fin Table</label>
-        <input type="text" @bind="@model.ficheFin.InformationsAConserver" class="form-control" placeholder="InformationsAConserver">
-        <input type="text" @bind="@model.ficheFin.PlanificationActions" class="form-control" placeholder="PlanificationActions">
-        <input type="text" @bind="@model.ficheFin.AutoEvaluation" class="form-control" placeholder="AutoEvaluation">
-        <label>Phases Table</label>
-        <input type="text" @bind="@model.phase.PhaseContact" class="form-control" placeholder="PhaseContact">
-        <input type="text" @bind="@model.phase.PhaseDecouverte" class="form-control" placeholder="PhaseDecouverte">
-        <input type="text" @bind="@model.phase.PhaseTransition" class="form-control" placeholder="PhaseTransition">
-        <input type="text" @bind="@model.phase.PhaseVente" class="form-control" placeholder="PhaseVente">
-        <input type="text" @bind="@model.phase.PhaseConclusion" class="form-control" placeholder="PhaseConclusion">
-        <input type="text" @bind="@model.phase.PhaseAsseoirVente" class="form-control" placeholder="PhaseAsseoirVente">
-        <input type="text" @bind="@model.phase.PhasePriseConge" class="form-control" placeholder="PhasePriseConge">*@
+        @if (model.ficheContexteSimplifiee != null)
+        {
+            <h3><u>Fiche contexte simplifiée*</u></h3>
+            <br />
+            <label class="documentLabels">Nom de l’entreprise (et éventuellement compagnie mandante):</label>
+            <br />
+            <input type="text" @bind="@model.ficheContexteSimplifiee.EntrepriseNom" maxlength="150" class="form-control" placeholder="Entreprise Nom">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheContexteSimplifiee.CompagnieMandante" maxlength="150" class="form-control" placeholder="Compagnie Mandante">
 
+            <h3>Contexte commercial de l’activité:</h3>
+            <label class="documentLabels">Le cas échéant, historique, présentation du portefeuille clients, des activités de l’entreprise, description du plan de prospection ou d’animation commerciale : cible, actions commerciales, réductions commerciales offertes en cas de souscription (nature, montant, période…),…</label>
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.Historique" class="form-control" placeholder="Historique" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.PresentationPortefeuilleClients" class="form-control" placeholder="Presentation Portefeuille Clients" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.ActivitesEntreprise" class="form-control" placeholder="Activites Entreprise" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.Cible" class="form-control" placeholder="Cible" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.ActionsCommerciales" class="form-control" placeholder="Actions Commerciales" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.ReductionsNature" class="form-control" placeholder="Reductions Nature" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.ReductionsMontant" class="form-control" placeholder="Reductions Montant" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.ReductionsPeriode" class="form-control" placeholder="Reductions Periode" />
+            @:&nbsp;
+            <textarea rows="3" type="text" @bind="@model.ficheContexteSimplifiee.ReductionsAutre" class="form-control" placeholder="Reductions Autre" />
+        }
+        @if (model.ficheClientProspect != null)
+        {
+            <h3><u>Fiche client ou prospect **</u></h3>
+            <br />
+            <h4>Identification</h4>
+            <br />
+            <input type="text" @bind="@model.ficheClientProspect.Nom" maxlength="150" class="form-control" placeholder="Nom">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Prenom" maxlength="150" class="form-control" placeholder="Prenom">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Sexe" maxlength="150" class="form-control" placeholder="Sexe">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Age" maxlength="150" class="form-control" placeholder="Age">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Adresse" maxlength="150" class="form-control" placeholder="Adresse">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.CodePostal" maxlength="150" class="form-control" placeholder="CodePostal">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Ville" maxlength="150" class="form-control" placeholder="Ville">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Telephone" maxlength="150" class="form-control" placeholder="Telephone">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Mobile" maxlength="150" class="form-control" placeholder="Mobile">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Mail" maxlength="150" class="form-control" placeholder="Mail">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.Autre" maxlength="150" class="form-control" placeholder="Autre">
+
+            <h4>Situation familiale</h4>
+            <br />
+            <input type="text" @bind="@model.ficheClientProspect.SituationFamiliale" maxlength="150" class="form-control" placeholder="Situation Familiale">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.NbEnfants" maxlength="150" class="form-control" placeholder="Nb Enfants">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.AgesEnfants" maxlength="150" class="form-control" placeholder="Ages Enfants">
+            @:&nbsp;
+            <input type="text" @bind="@model.ficheClientProspect.SituationProfessionnelle" maxlength="150" class="form-control" placeholder="Situation Professionnelle">
+
+            <h4>Si client :</h4>
+            <input type="checkbox" bind=@model.ficheClientProspect.IsClient @onchange="checkboxChanged" />//@onchange="eventArgs => { CheckboxClicked("IsClient", eventArgs.Value); }"
+            <h4>Statut et ancienneté :</h4>
+            <br />
+
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.Statut" maxlength="150" class="form-control" placeholder="Statut">
+            @:&nbsp;
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.Anciennete" maxlength="150" class="form-control" placeholder="Anciennete">
+            <br />
+            <h5>Contrats détenus en portefeuille</h5>
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.ContratsType" maxlength="150" class="form-control" placeholder="Contrats Type">
+            @:&nbsp;
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.ContratsGarantie" maxlength="150" class="form-control" placeholder="Contrats Garantie">
+            @:&nbsp;
+            <input type="datetime-local" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.ContratsDateSouscription" class="form-control" placeholder="Contrats Date Souscription">
+            @:&nbsp;
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.ContratsAnnualSubscription" maxlength="150" class="form-control" placeholder="Contrats Annual Subscription">
+            <br />
+            <h5>Autres informations</h5>
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.Revenus" maxlength="150" class="form-control" placeholder="Revenus">
+            @:&nbsp;
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.TauxImposition" maxlength="150" class="form-control" placeholder="Taux Imposition">
+            @:&nbsp;
+            <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.Placements" maxlength="150" class="form-control" placeholder="Placements">
+        }
+        @if (EditorEnabled)
+        {
+            <br />
+            <div>
+                @EditorContent
+            </div>
+            <div>
+                @((MarkupString)@EditorHTMLContent)
+            </div>
+            <br />
+            <BlazoredTextEditor @ref="@QuillHtml">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p>
+                        <strong>Origine du contact</strong>:
+                    </p><p>
+                        <em style='color: rgb(68, 114, 196);'>
+                            Ici il faut décrire en quelques lignes
+                            ce qui a amené le prospect/client chez vous et pourquoi
+                        </em>
+                    </p><p><br></p><p>
+                        <em style='color: rgb(68, 114, 196);'>Exemples&nbsp;: </em>
+                    </p><p>
+                        <em style='color: rgb(68, 114, 196);'>
+                            «&nbsp;Après avoir visionné un spot publicitaire sur Twitter, Mme Doe m’a contacté 3 jours auparavant afin de prendre rendez-vous pour assurer son nouveau véhicule en Tous Risques Eco
+                        </em>
+                    </p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <br />
+            <button class="btn btn-primary"
+                    @onclick="GetHTML">
+                Get HTML
+            </button>
+            <button class="btn btn-primary"
+                    @onclick="SetHTML">
+                Set HTML
+            </button>
+            <br />
+            <div>
+                <br />
+                @((MarkupString)QuillHTMLContent)
+                @QuillHTMLContent
+            </div>
+            <br />
+
+            <input type="text" @bind="@model.descriptionActivite.FormOfCommunication" maxlength="150" class="form-control" placeholder="Form Of Communication">
+            @:&nbsp;
+            <BlazoredTextEditor @ref="@ActeursImpliqués">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong>Acteurs impliqués dans la situation</strong>&nbsp;:</p><p> </p><p><em style="color: rgb(47, 84, 150);">Précisez le rôle et la fonction</em></p><p><em style="color: rgb(47, 84, 150);"><span class="ql-cursor">﻿</span></em></p><p>Étudiant&nbsp;:</p><p>Professionnel&nbsp;:</p><p>Client/Prospect&nbsp;:</p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)ActeursImpliquésContent)
+                @ActeursImpliquésContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseOne">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong>Déroulement&nbsp;:</strong></p><p><strong><span class="ql-cursor">﻿</span></strong></p><p><em style="color: red;">Au fil de la description, mettre en évidence notamment&nbsp;: les techniques de vente et de communication utilisées ou observées au cours de l’entretien commercial, les supports de communication mobilisés, les documents remis au client lors de l’entretien</em></p><p><em style="color: red;">Indiquer les garanties, franchises, capitaux assurés et les avantages produit lors de la phase conseil.</em></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseOneContent)
+                @PhaseOneContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseOne">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong><u>PHASE 1 Contact&nbsp;: </u></strong></p><p><strong>Ø</strong>&nbsp;<strong>Accueil du Client/prospect</strong></p><p><span style="color: rgb(68, 114, 196);">Sourire / Bienveillance / Politesse (Eau, Café) …</span></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><strong>Ø</strong>&nbsp;<strong>Durée de l’entretien </strong></p><p><span style="color: rgb(68, 114, 196);">Validé avec Client/Prospect pour un entretien de 15 minutes </span></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><strong>Ø</strong>&nbsp;<strong>Présentation du déroulé de l’entretien </strong></p><p><span style="color: rgb(68, 114, 196);">J’explique à mon client les différentes phases de notre entretien&nbsp;: (Ex&nbsp;: Présentation de l’entreprise / Questions sur le besoin et le budget / Présentation offre la plus adaptée / Edition contrat) </span></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong>Présentation de l’entreprise </strong><strong style="color: red;">(Non systématique seulement si prospect)</strong></p><p><span style="color: rgb(68, 114, 196);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vous connaissez AXA&nbsp;? Nous sommes le leader … Nos valeurs sont …</span></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseOneContent)
+                @PhaseOneContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseTwo">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong><u>PHASE 2 Découverte&nbsp;: </u></strong></p><p><br></p><p><strong style="color: red;"><u>A adapter selon le produit&nbsp;! </u></strong></p><p><span style="color: red;">&nbsp;</span></p><p><strong style="color: red;">Cette étape se fait avec l’aide de questionnaires fermés préparés à l’avance&nbsp;!</strong></p><p><em style="color: red;">Bien entendu l’utilisation du questionnaire fermé ne doit pas se faire comme un interrogatoire. Il faut entrecouper cette phase par des questions ouvertes orientées afin de continuer à instaurer la confiance. </em></p><p><span style="color: red;">Ex.&nbsp;: Utilisation de la technique </span><strong style="color: red;">FOCA</strong></p><p><span style="color: red;">&nbsp;</span></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Questions d’information : </strong></p><p><em style="color: rgb(68, 114, 196);">Ex&nbsp;: Mise à jour de vos données : Me confirme toujours être Cadre supérieure / me confirme que ses coordonnées postales, électroniques et téléphoniques sont inchangées / M’informe que ses aînés (jumeaux) sont en train de passer leur permis en conduite accompagnée </em></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Nature du besoin : </strong></p><p><em style="color: rgb(68, 114, 196);">Ex&nbsp;: Contrat d’assurance Auto Tous Risques pour son nouveau véhicule : MERCEDES GLE Essence / 10CV / Mise en circulation au 08/03/2019 – Usage privé (domicile-travail) – Conduite couple – CRM de Madame inchangé : 0,50 – CRM de Monsieur inchangé : 0,50 avec un BDG </em></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Questions d’approfondissement : </strong></p><p><em style="color: rgb(68, 114, 196);">Ex&nbsp;: Motivation du choix de la cliente : un véhicule déjà sous contrat et souhaite profiter de la promotion pour assurer son nouveau véhicule à un coût moins important </em></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Questions d’orientation : </strong></p><p><em style="color: rgb(68, 114, 196);">Ex&nbsp;: Ce que vous souhaitez c’est un contrat Tous Risques pour votre véhicule neuf ? La cliente me confirme…</em></p><p><span style="color: red;">&nbsp;</span></p><p><strong style="color: red;">Attention à cette étape on ne parle pas encore des offres mais des besoins&nbsp;!</strong></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseTwoContent)
+                @PhaseTwoContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseThree">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong><u>Phase 3&nbsp;: Transition </u></strong></p><p><strong>&nbsp;</strong></p><p><strong><u>Ø</u></strong>&nbsp;<strong>Reformulation du besoin&nbsp;:</strong></p><p><em style="color: rgb(68, 114, 196);">Ex.&nbsp;: Si j’ai bien compris vous avez déjà un véhicule assuré chez nous et vous êtes satisfait de l’offre. Vous venez d’acquérir un nouveau véhicule&nbsp;; Une mercedes GLE… Vous êtes une très bonne conductrice car vous avez un bonus 0,50 depuis plus de 3 ans. Tout naturellement comme le véhicule est neuf vous souhaitez l’assurer en tous risques avec le minimum en franchise&nbsp;? Et vous disposez pour cela d’un budget maximum de 100 euros par mois&nbsp;?</em></p><p><em style="color: rgb(68, 114, 196);">Elle&nbsp;me valide toutes mes informations.</em>&nbsp;</p><p><strong style="color: red;">&nbsp;</strong></p><p><strong style="color: red;">Ici il faut amener doucement le prospect / client de la phase où on le questionne vers la phase où on lui présente notre offre. Cela peut se faire par différentes façons selon le cas mais c’est essentiellement par le biais de la reformulation.</strong></p><p><strong style="color: red;">&nbsp;</strong></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">La phrase magique&nbsp;:</strong></p><p><span style="color: rgb(68, 114, 196);">Y a-t-il une question que je ne vous ai pas posée et que vous auriez aimé que je vous pose ?</span></p><p><strong style="color: red;">Cette phrase permet de verrouiller la phase de découverte en s’assurant d’avoir demandé toutes les questions à son client et montrer aussi votre humilité.</strong></p><p><strong style="color: red;">&nbsp;</strong></p><p>Ø&nbsp;<strong>Passage à la phase de vente&nbsp;:</strong></p><p><span style="color: rgb(68, 114, 196);">Monsieur le prospect / client voulez-vous que je vous présente la meilleure offre par rapport à votre besoin&nbsp;?</span></p><p><span style="color: rgb(68, 114, 196);">Le prospect acquiesce.</span></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseThreeContent)
+                @PhaseThreeContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseFour">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong><u>Phase 4&nbsp;: Vente </u></strong><strong style="color: rgb(68, 114, 196);"><u>(Technique du CAB)</u></strong></p><p><strong style="color: red;">&nbsp;</strong></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Caractéristiques&nbsp;: Présentation des formules</strong><span style="color: rgb(68, 114, 196);"> </span></p><p><em style="color: rgb(68, 114, 196);">Ex. : Présentation du tableau de garantie, des deux offres en tous risques, La différence entre les deux est que dans la première nous n’avons pas … La franchise proposé est de … Les exclusions sont …</em></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Avantages&nbsp;: Mise en avant d’une formule ou de l’offre </strong></p><p><em style="color: rgb(68, 114, 196);">Ex. : Notre produit permet de prendre en charge le stage pour rattraper ses points. De plus vous avez le droit 3 fois par an à un chauffeur pour vous ramener à la maison en cas de soirée trop arrosée…</em></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Bénéfice&nbsp;: Présenter un point de l’offre qui a un intérêt tout particulier pour votre client (Technique du SONCAS)</strong></p><p><em style="color: rgb(68, 114, 196);">Ex. : J’ai repéré que le client était plutôt sécuritaire alors je lui ai parlé de notre garantie valeur d’achat sur 3 ans qui permet de l’indemniser au prix d’achat son véhicule en cas de vol ou de destruction totale.</em></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Reformulation de l’offre et annonce du tarif&nbsp;: Reprendre les points importants de l’offre que le client a choisi et lui annoncer le prix. </strong></p><p><em style="color: rgb(68, 114, 196);">Ex. : Madame, nous sommes donc d’accord pour partir sur l’offre tous risques classiques afin que vous puissiez être couverte au mieux pour votre véhicule. Le conducteur principal c’est vous-même et vous avez ajoutez votre conjoint en conducteur secondaire ? C’est bien cela ?</em></p><p><em style="color: rgb(68, 114, 196);">Donc pour cette offre j’ai le plaisir de vous annoncer que nous sommes bien dans votre budget de x Euros soit un montant de x Euros. (Ici il est essentiel de laisser un silence et laisser le client répondre)</em></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><span style="color: rgb(68, 114, 196);">Ø&nbsp;</span><strong style="color: rgb(68, 114, 196);">Traitement des objections et validation</strong></p><p><span style="color: rgb(68, 114, 196);">Utilisation de la technique de traitement des objections&nbsp;:</span></p><p><span style="color: black;">ü&nbsp;</span><span style="color: rgb(68, 114, 196);">On accepte l’objection</span></p><p><span style="color: black;">ü&nbsp;</span><span style="color: rgb(68, 114, 196);">On l’isole ou on le minimise</span></p><p><span style="color: black;">ü&nbsp;</span><span style="color: rgb(68, 114, 196);">On trouve une solution </span></p><p><strong style="color: red;">&nbsp;</strong></p><p><em style="color: rgb(68, 114, 196);">Ex.&nbsp;: Objection prix&nbsp;: </em></p><p><em style="color: rgb(68, 114, 196);">Le client me dit que c’est trop cher&nbsp;: </em></p><p><span style="color: rgb(68, 114, 196);">ü&nbsp;</span><em style="color: rgb(68, 114, 196);">J’accepte que le prix soit un frein pour lui. </em></p><p><span style="color: rgb(68, 114, 196);">ü&nbsp;</span><em style="color: rgb(68, 114, 196);">J’isole l’objection&nbsp;: Mis à part le prix tous le reste vous convient ? Il répond que oui. </em></p><p><span style="color: rgb(68, 114, 196);">ü&nbsp;</span><em style="color: rgb(68, 114, 196);">Je réajuste la franchise pour atteindre le budget désiré.</em></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseFourContent)
+                @PhaseFourContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseFive">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong><u>Phase 5&nbsp;: Conclusion</u></strong></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><em style="color: red;">N’oubliez pas que l’objectif n’est pas la vente en tant que tel mais la structure de votre entretien de vente&nbsp;!</em></p><p>&nbsp;</p><p><strong style="color: rgb(68, 114, 196);">Résumé de l’entretien en prenant soin de valider ce qui vient d’être dit avec le/la client(e) </strong></p><p><em style="color: rgb(68, 114, 196);">Ex.&nbsp;: « Nous sommes d’accord que vous préférez après comparaison opter pour une formule Tous Risques classique car vous l’estimez plus sereine pour le type de véhicule que vous achetez ? » </em></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><strong style="color: rgb(68, 114, 196);">Validation administrative&nbsp;:</strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><span style="color: rgb(68, 114, 196);">ü&nbsp;Présentation des conditions particulières ou devis § Vérification des documents nécessaires à la souscription </span></p><p><em style="color: rgb(68, 114, 196);">Ex.&nbsp;: - Permis de conduire (Madame et Monsieur) - Relevé d’information (Madame et Monsieur) - Carte grise - RIB : identique au compte actuellement prélevé&nbsp;</em></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><span style="color: rgb(68, 114, 196);">ü&nbsp;Présentation du contrat ou devis pour signature.</span></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseFiveContent)
+                @PhaseFiveContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseSix">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong><u>Phase 6&nbsp;: Asseoir la vente </u></strong></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p class="ql-align-justify"><span style="color: red;">Pour clore un entretien il y a deux manières de le faire selon la situation, soit </span><strong style="color: red;">par un rebond commercial si au cours de l’entretien on a repéré le besoin ou à défaut une recommandation. </strong></p><p class="ql-align-justify"><span style="color: red;">&nbsp;</span></p><p class="ql-align-justify"><span style="color: red;">Cette dernière est possible dans tous les cas car si l’entretien c’est bien déroulé le prospect ou client ne peut être que ravi de vos conseils et vous recommander.</span></p><p class="ql-align-justify"><span style="color: red;">&nbsp;</span></p><p class="ql-align-justify"><span style="color: red;">S’agissant du rebond commercial ce qu’on attend c’est d’annoncer le produit et de prendre date ultérieurement pour l’étudier. N’aller pas vendre le produit immédiatement car le temps imparti est trop court&nbsp;! (15 minutes)</span></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><span style="color: rgb(68, 114, 196);">&nbsp;</span></p><p><strong style="color: rgb(68, 114, 196);">Rebond commercial, méthode type&nbsp;en 3 phases&nbsp;:</strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);"><em>Question&nbsp;: Monsieur le prospect / client êtes vous satisfait de notre entretien&nbsp;? Ai-je répondu à l’ensemble de vos attentes&nbsp;?</em></strong></p><p><strong style="color: rgb(68, 114, 196);"><em>Réponse&nbsp;: Oui parfait</em></strong></p><p><strong style="color: rgb(68, 114, 196);"><em>&nbsp;</em></strong></p><p><strong style="color: rgb(68, 114, 196);"><em>Question&nbsp;: Vous m’avez fait part durant notre entretien de&nbsp;: &nbsp;</em></strong><em style="color: rgb(68, 114, 196);">«&nbsp;votre inquiétude en cas d’accident domestique&nbsp;» «&nbsp;de votre besoin d’étudier l’ensemble de vos risques actuels pour trouver des solutions assurantielles&nbsp;» … </em></p><p><strong style="color: rgb(68, 114, 196);">Réponse&nbsp;: oui c’est exact</strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);">Question&nbsp;: Je vous propose donc d’étudier cela lors d’un prochain RDV semaine prochaine même jour même heure&nbsp;? je vous rassure je vous appel la veille du RDV pour confirmer.</strong></p><p><strong style="color: rgb(68, 114, 196);">Réponse&nbsp;: Ok c’est noté.</strong><a href="#_msocom_2" target="_blank">[WD2]</a>&nbsp;</p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);">Recommandation, méthode type&nbsp;en 3 phases&nbsp;:</strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);"><em>Question&nbsp;: Monsieur le prospect / client êtes-vous satisfait de notre entretien&nbsp;? Ai-je répondu à l’ensemble de vos attentes&nbsp;?</em></strong></p><p><strong style="color: rgb(68, 114, 196);"><em>Réponse&nbsp;: Oui parfait</em></strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);">Question&nbsp;: Vous seriez donc capable de me recommander auprès de vos proches et réseau pour leurs faire profiter du même niveau de conseil&nbsp;? </strong></p><p><strong style="color: rgb(68, 114, 196);">Réponse&nbsp;: Oui bien entendu.</strong></p><p><strong style="color: rgb(68, 114, 196);">&nbsp;</strong></p><p><strong style="color: rgb(68, 114, 196);">Différentes méthodes sur cette dernière phase&nbsp;:</strong></p><p><span style="color: black;">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(68, 114, 196);">Vous avez repéré lors de l’entretien une ou plusieurs personnes susceptibles d’être une cible pour vous. Dès lors il faut obtenir leurs coordonnées.</span></p><p><em style="color: rgb(68, 114, 196);">Exemple&nbsp;: «&nbsp;Monsieur le prospect vous m’avez parlez de votre frère qui se trouve dans la même situation que vous. Je vous propose de lui envoyer un sms que j’ai déjà préparé dans un premier temps. Puis je prendrais ses coordonnées pour le contacter.&nbsp;»</em></p><p><span style="color: black;">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span style="color: rgb(68, 114, 196);">Vous n’avez pas repéré durant l’entretien de personnes susceptible de bénéficier de la recommandation de votre client alors demander lui directement à qui il pense. </span></p><p><span style="color: black;">-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><em style="color: rgb(68, 114, 196);">Exemple&nbsp;: Monsieur le prospect si je vous demande 3 nom qui pourrait bénéficier de mon conseil ce serait qui&nbsp;?</em></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseSixContent)
+                @PhaseSixContent
+            </div>
+            <BlazoredTextEditor @ref="@PhaseSeven">
+                <ToolbarContent>
+                    <select class="ql-header">
+                        <option selected=""></option>
+                        <option value="1"></option>
+                        <option value="2"></option>
+                        <option value="3"></option>
+                        <option value="4"></option>
+                        <option value="5"></option>
+                    </select>
+                    <span class="ql-formats">
+                        <button class="ql-bold"></button>
+                        <button class="ql-italic"></button>
+                        <button class="ql-underline"></button>
+                        <button class="ql-strike"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <select class="ql-color"></select>
+                        <select class="ql-background"></select>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-list" value="ordered"></button>
+                        <button class="ql-list" value="bullet"></button>
+                    </span>
+                    <span class="ql-formats">
+                        <button class="ql-link"></button>
+                    </span>
+                </ToolbarContent>
+                <EditorContent>
+                    <p><strong>Phase 7&nbsp;: prise de congé</strong></p><p><span style="color: red;">&nbsp;</span></p><p><span style="color: black;">Ø&nbsp;</span><span style="color: rgb(68, 114, 196);">Remise pochette client/ prospect (Contrat/ devis)</span></p><p><span style="color: black;">Ø&nbsp;</span><span style="color: rgb(68, 114, 196);">Remise carte de visite </span></p><p><span style="color: black;">Ø&nbsp;</span><span style="color: rgb(68, 114, 196);">Remercier le prospect/client du temps et de l’attention accordée</span></p>
+                </EditorContent>
+            </BlazoredTextEditor>
+            <div>
+                <br />
+                @((MarkupString)PhaseSevenContent)
+                @PhaseSevenContent
+            </div>
+        }
+        &nbsp;
         <button type="submit">Save</button>
     </EditForm>
 }
 
-
 @code {
-    // The field to be shown adjacent to checkbox  
-    //[Parameter] public Func<TItem, string> TextField { get; set; }  
-    //// The Value which checkbox will return when checked   
-    //[Parameter] public Func<TItem, object> ValueField { get; set; } 
+    private string strSavedContent = "";
+    private ElementReference divEditorElement;
+    private string EditorContent;
+    private string EditorHTMLContent;
+    private bool EditorEnabled = true;
+
+    BlazoredTextEditor QuillHtml;
+    string QuillHTMLContent;
+
+    BlazoredTextEditor ActeursImpliqués;
+    string ActeursImpliquésContent;
+
+    BlazoredTextEditor EntretienDeroulement;
+    string EntretienDeroulementContent;
+
+    BlazoredTextEditor PhaseOne;
+    string PhaseOneContent;
+
+    BlazoredTextEditor PhaseTwo;
+    string PhaseTwoContent;
+
+    BlazoredTextEditor PhaseThree;
+    string PhaseThreeContent;
+
+    BlazoredTextEditor PhaseFour;
+    string PhaseFourContent;
+
+    BlazoredTextEditor PhaseFive;
+    string PhaseFiveContent;
+
+    BlazoredTextEditor PhaseSix;
+    string PhaseSixContent;
+
+    BlazoredTextEditor PhaseSeven;
+    string PhaseSevenContent;
+
 
     public IEnumerable<Fiches> ficheList { get; set; }
     public ApplicationUser applicationUser { get; set; }
@@ -220,7 +706,7 @@ else
     public ContratsPortefeuilles contratsPortefeuille { get; set; }
     public DescriptionsActivite descriptionActivite { get; set; }
     public FichesClientProspect ficheClientProspect { get; set; }
-    public FichesContexteSimplifiee ficheContexteSimplifiee { get; set; }
+    public FichesContexteSimplifiee fichesContexteSimplifiee { get; set; }
     public FichesFin ficheFin { get; set; }
     public Phases phase { get; set; }
     public Fiches fiche { get; set; }
@@ -229,6 +715,11 @@ else
     public string msg { get; set; }
     public bool health { get; set; } = true;
     public bool Foresight { get; set; } = true;
+    public bool Automobile { get; set; } = true;
+    public bool IsClientCheck { get; set; } = true;
+
+    public bool SavingsProduct { get; set; } = true;
+    public bool MRH { get; set; } = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -239,7 +730,12 @@ else
         {
             try
             {
-                model = (await ficheService.GetAllFichesInViewModel(loggedInUserId));
+                //model = (await ficheService.GetAllFichesInViewModel(loggedInUserId));
+                model = new MainViewModel();
+                model.ficheContexteSimplifiee = new FichesContexteSimplifiee();
+                model.ficheClientProspect = new FichesClientProspect();
+                model.descriptionActivite = new DescriptionsActivite();
+                //SetHTML();
                 //fiche = ficheList.FirstOrDefault(x => x.StudentId == loggedInUserId);
                 //NumeroFiche = "Document No. " + fiche.NumeroFiche;
                 //Set Models
@@ -272,9 +768,50 @@ else
             msg = "Please sign in";
         }
     }
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        await JSRuntime.InvokeAsync<string>("QuillFunctions.createQuill", divEditorElement);
+    //    }
+    //}
+    //async Task GetText()
+    //{
+    //    EditorHTMLContent = "";
+    //    EditorContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillText", divEditorElement);
+    //}
+    //async Task GetHTML()
+    //{
+    //    EditorHTMLContent = "";
+    //    EditorHTMLContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillHTML", divEditorElement);
+    //}
+    //async Task GetEditorContent()
+    //{
+    //    EditorHTMLContent = "";
+    //    EditorHTMLContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillContent", divEditorElement);
+    //}
+    //async Task SaveContent()
+    //{
+    //    strSavedContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillContent", divEditorElement);
+    //}
+    //async Task LoadContent()
+    //{
+    //    var QuillDelta = await JSRuntime.InvokeAsync<string>("QuillFunctions.loadQuillContent", divEditorElement, strSavedContent);
+    //}
+    public async void GetHTML()
+    {
+        QuillHTMLContent = await this.QuillHtml.GetHTML();
+        StateHasChanged();
+    }
+
+    public async void SetHTML()
+    {
+        string QuillContent = DefaultText.Origine_du_contact;
+        await this.QuillHtml.LoadHTMLContent(QuillContent);
+        StateHasChanged();
+    }
     async Task EditFinch()
     {
-
         try
         {
             //CommandResponse response;
@@ -286,8 +823,10 @@ else
             //var request = new CommandRequest() //{RequestNumber = 3};
             //var test = Storage.GetItem("environment_uri") + "/api/Fiches/Update";
             //await Http.SendJsonAsync(HttpMethod.Post,  "https://localhost:44376/api/Fiches/Update", model);
-            await Http.SendJsonAsync(HttpMethod.Put, "https://localhost:44376/api/Fiches/" + model.fiche.Id, model);
             //await Http.SendJsonAsync<MainViewModel>(HttpMethod.Post, "api/Fiches/Update", model);
+            //Running Edit function below
+            //await Http.SendJsonAsync(HttpMethod.Put, "https://localhost:44376/api/Fiches/" + model.fiche.Id, model);
+            await Http.SendJsonAsync(HttpMethod.Post, "https://localhost:44380/api/Fiches/", model);
         }
         catch (Exception ex)
         {
@@ -295,25 +834,74 @@ else
         }
 
     }
+    public void checkboxChanged(ChangeEventArgs e)
+    {
+        if (e.Value != null)
+        {
+            if ((bool)e.Value)
+            {
+                IsClientCheck = false;
+            }
+            else
+            {
+                IsClientCheck = true;
+            }
+        }
+    }
     public void dropdownChanged(ChangeEventArgs e)
     {
         string selectedString = e.Value.ToString();
-        if (selectedString.Equals("Santé du particulier") || selectedString.Equals("Santé collective")){
+        if (selectedString.Equals("Santé du particulier") || selectedString.Equals("Santé collective"))
+        {
             health = false;
             Foresight = true;
-        }else if (selectedString.Equals("Prévoyance décès") || selectedString.Equals("Prévoyance collective"))
+            Automobile = true;
+            SavingsProduct = true;
+            MRH = true;
+        }
+        else if (selectedString.Equals("Prévoyance décès") || selectedString.Equals("Prévoyance collective"))
         {
             Foresight = false;
             health = true;
+            Automobile = true;
+            SavingsProduct = true;
+            MRH = true;
+        }
+        else if (selectedString.Equals("Auto du particulier") || selectedString.Equals("Auto du pro"))
+        {
+            Foresight = true;
+            health = true;
+            Automobile = false;
+            SavingsProduct = true;
+            MRH = true;
+        }
+        else if (selectedString.Equals("Assurance vie") || selectedString.Equals("Retraite") || selectedString.Equals("Epargne bancaire"))
+        {
+            Foresight = true;
+            health = true;
+            Automobile = true;
+            SavingsProduct = false;
+            MRH = true;
+        }
+        else if (selectedString.Equals("MRH") || selectedString.Equals("MRP") || selectedString.Equals("Gav"))
+        {
+            Foresight = true;
+            health = true;
+            Automobile = true;
+            SavingsProduct = true;
+            MRH = false;
         }
         else
         {
             Foresight = true;
             health = true;
+            Automobile = true;
+            SavingsProduct = true;
+            MRH = true;
         }
 
     }
-    //Method to update the selected value on click on checkbox   
+    //Method to update the selected value on click on checkbox
     public void CheckboxClicked(string aSelectedId, object aChecked)
     {
         if ((bool)aChecked)
@@ -325,10 +913,10 @@ else
         }
         else
         {
-            //if (SelectedValues.Contains(aSelectedId))  
-            //{  
-            //    SelectedValues.Remove(aSelectedId);  
-            //}  
+            //if (SelectedValues.Contains(aSelectedId))
+            //{
+            //    SelectedValues.Remove(aSelectedId);
+            //}
         }
         StateHasChanged();
     }

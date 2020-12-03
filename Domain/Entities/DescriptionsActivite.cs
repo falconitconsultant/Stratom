@@ -8,8 +8,9 @@ namespace Domain.Entities
         public int Id { get; set; }
         public int FicheId { get; set; }
         public string ContactOrigine { get; set; }
-        public string ContactFaceAface { get; set; }
-        public string ContactTelephone { get; set; }
+        public string FormOfCommunication { get; set; }
+        //public string ContactFaceAface { get; set; }
+        //public string ContactTelephone { get; set; }
         public string ContactRole { get; set; }
         public string ContactFonction { get; set; }
         public string EntretienObjectifs { get; set; }

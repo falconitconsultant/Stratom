@@ -12,5 +12,6 @@ namespace ApplicationServices.Business.AppServices.IAppServices
         Task<Phases> GetWithFichesByIdAsync(int id);
         Task<IEnumerable<Phases>> GetAllWithFicheByFicheIdAsync(int ficheId);
         void Update(Phases phase);
+        void Add(Phases phase);
     }
 }

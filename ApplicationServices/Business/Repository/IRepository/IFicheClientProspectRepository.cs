@@ -12,5 +12,6 @@ namespace ApplicationServices.Business.AppServices.IAppServices
         Task<FichesClientProspect> GetWithFichesByIdAsync(int id);
         Task<IEnumerable<FichesClientProspect>> GetAllWithFicheByFicheIdAsync(int ficheId);
         void Update(FichesClientProspect ficheClientProspect);
+        void Add(FichesClientProspect ficheClientProspect);
     }
 }

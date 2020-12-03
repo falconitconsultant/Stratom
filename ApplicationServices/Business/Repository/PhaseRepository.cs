@@ -47,5 +47,11 @@ namespace ApplicationServices.Business.AppServices
             objFromDb.PhasePriseConge = phase.PhasePriseConge;
             StratomContext.SaveChanges();
         }
+
+        public void Add(Phases phase)
+        {
+            StratomContext.Phases.Add(phase);
+            StratomContext.SaveChanges();
+        }
     }
 }

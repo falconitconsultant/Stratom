@@ -41,11 +41,17 @@ namespace ApplicationServices.Business.AppServices
             var objFromDb = StratomContext.DescriptionsActivite.FirstOrDefault(c => c.Id == descriptionActivite.Id);
             objFromDb.ContactOrigine = descriptionActivite.ContactOrigine;
             //objFromDb.ContactFaceAFace = descriptionActivite.ContactFaceAFace;
-            objFromDb.ContactTelephone = descriptionActivite.ContactTelephone;
+            //objFromDb.ContactTelephone = descriptionActivite.ContactTelephone;
             objFromDb.ContactRole = descriptionActivite.ContactRole;
             objFromDb.ContactFonction = descriptionActivite.ContactFonction;
             objFromDb.EntretienObjectifs = descriptionActivite.EntretienObjectifs;
             objFromDb.EntretienDeroulement = descriptionActivite.EntretienDeroulement;
+            StratomContext.SaveChanges();
+        }
+
+        public void Add(DescriptionsActivite descriptionActivite)
+        {
+            StratomContext.DescriptionsActivite.Add(descriptionActivite);
             StratomContext.SaveChanges();
         }
     }

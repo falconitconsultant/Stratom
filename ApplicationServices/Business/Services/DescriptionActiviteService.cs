@@ -48,7 +48,7 @@ namespace Stratom.Form.Services.Services
         {
             descriptionActiviteToBeUpdated.ContactOrigine = descriptionActivite.ContactOrigine;
             //descriptionActiviteToBeUpdated.ContactFaceAFace = descriptionActivite.ContactFaceAFace;
-            descriptionActiviteToBeUpdated.ContactTelephone = descriptionActivite.ContactTelephone;
+            //descriptionActiviteToBeUpdated.ContactTelephone = descriptionActivite.ContactTelephone;
             descriptionActiviteToBeUpdated.ContactRole = descriptionActivite.ContactRole;
             descriptionActiviteToBeUpdated.ContactFonction = descriptionActivite.ContactFonction;
             descriptionActiviteToBeUpdated.EntretienObjectifs = descriptionActivite.EntretienObjectifs;

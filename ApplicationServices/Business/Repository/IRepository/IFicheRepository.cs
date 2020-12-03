@@ -16,6 +16,7 @@ namespace ApplicationServices.Business.AppServices.IAppServices
         Task<Fiches> GetAllByNumeroFicheAsync(int etudiantId, int numeroFiche);
         Task<IEnumerable<Fiches>> GetAllByEtudiantIdAsync(int etudiantId);
         void Update(Fiches fiche);
+        void Add(Fiches fiche);
         //Not needed atm
         //Task<IEnumerable<Fiche>> GetAllByActiviteTypeIdAsync(int activiteTypeId);
         //Task<IEnumerable<Fiche>> GetAllByConcerneIdAsync(int concerneId);

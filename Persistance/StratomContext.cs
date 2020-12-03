@@ -116,9 +116,9 @@ namespace Persistance
             {
                 entity.HasIndex(e => e.FicheId);
 
-                entity.Property(e => e.ContactFaceAface)
-                    .HasColumnName("ContactFaceAFace")
-                    .HasColumnType("text");
+                //entity.Property(e => e.ContactFaceAface)
+                //    .HasColumnName("ContactFaceAFace")
+                //    .HasColumnType("text");
 
                 entity.Property(e => e.ContactFonction).HasColumnType("text");
 
@@ -126,7 +126,7 @@ namespace Persistance
 
                 entity.Property(e => e.ContactRole).HasColumnType("text");
 
-                entity.Property(e => e.ContactTelephone).HasColumnType("text");
+                //entity.Property(e => e.ContactTelephone).HasColumnType("text");
 
                 entity.Property(e => e.EntretienDeroulement).HasColumnType("text");
 

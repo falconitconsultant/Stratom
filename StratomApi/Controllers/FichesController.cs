@@ -93,8 +93,27 @@ namespace StratomApi.Controllers
         }
         // POST: api/Fiches
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] MainViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Fiches.Add(model.fiche);
+                _unitOfWork.FichesClientProspect.Add(model.ficheClientProspect);
+                _unitOfWork.Phases.Add(model.phase);
+                _unitOfWork.FichesContexteSimplifiee.Add(model.ficheContexteSimplifiee);
+                _unitOfWork.ContratsPortefeuilles.Add(model.contratsPortefeuille);
+                _unitOfWork.DescriptionsActivite.Add(model.descriptionActivite);
+                
+                //_unitOfWork.Fiches.Add(model.fiche);
+                //_unitOfWork.Fiches.Add(model.fiche);
+                //_unitOfWork.Fiches.Add(model.fiche);
+                //_unitOfWork.Fiches.Add(model.fiche);
+                //_unitOfWork.Fiches.Add(model.fiche);
+                //_unitOfWork.Fiches.Add(model.fiche);
+                //_unitOfWork.Fiches.Add(model.fiche);
+                //_unitOfWork.Fiches.Add(model.fiche);
+
+            }
         }
 
         // PUT: api/Fiches/5

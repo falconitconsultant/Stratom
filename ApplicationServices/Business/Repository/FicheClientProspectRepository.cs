@@ -62,5 +62,11 @@ namespace ApplicationServices.Business.AppServices
             objFromDb.Placements = ficheClientProspect.Placements;
             StratomContext.SaveChanges();
         }
+
+        public void Add(FichesClientProspect ficheClientProspect)
+        {
+            StratomContext.FichesClientProspect.Add(ficheClientProspect);
+            StratomContext.SaveChanges();
+        }
     }
 }
