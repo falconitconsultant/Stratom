@@ -41,12 +41,13 @@ namespace StratomApi.Controllers
                 if (id != null)
                 {
                     IEnumerable<Fiches> fiche;// = new IEnumerable<Fiche>();
-                    model.fiche = await _unitOfWork.Fiches.GetAllFichesByStudentId(id);
+                    //model.fiche = await _unitOfWork.Fiches.GetAllFichesByStudentId(id);
                     model.activiteType = await _unitOfWork.ActiviteTypes.GetAllAsync();
                     model.concerne = await _unitOfWork.Concernes.GetAllAsync();
                     model.activite = await _unitOfWork.Activites.GetAllAsync();
                     model.assurancePersonne = await _unitOfWork.AssurancesPersonne.GetAllAsync();
                     model.assuranceDommage = await _unitOfWork.AssurancesDommage.GetAllAsync();
+
                     //usr = await _unitOfWork.applicationUser.GetAllByStudentId(id);
                     //model.Nom = usr.Nom;
                     //model.Prenom = usr.Prenom;
