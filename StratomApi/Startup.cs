@@ -1,12 +1,16 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using ApplicationServices;
 using ApplicationServices.Business.AppServices;
 using ApplicationServices.Business.AppServices.IAppServices;
 using ApplicationServices.Business.Services;
 using ApplicationServices.Business.Services.IServices;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,6 +23,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Persistance;
 using Stratom.Form.Services.Services;
+using StratomApi.Utility;
 
 namespace StratomApi
 {
@@ -47,12 +52,19 @@ namespace StratomApi
             services.AddTransient<IFicheContexteSimplifieeService, FicheContexteSimplifieeService>();
             services.AddTransient<IFicheFinService, FicheFinService>();
             services.AddTransient<IPhaseService, PhaseService>();
-            services.AddDbContext<StratomContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default"), x => x.MigrationsAssembly("Stratom.Form.Data")));
+            services.AddDbContext<StratomContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), x => x.MigrationsAssembly("Stratom.Form.Data")));
+            //services.AddScoped<IConverter>();
+            string filePath = $@"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\libwkhtmltox.dll";
+
+            CustomAssemblyLoadContext context = new CustomAssemblyLoadContext();
+            context.LoadUnmanagedLibrary(filePath);
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
             services.AddControllers();
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Stratom Form", Version = "v1" });
             });
+
             //services.AddControllers();
             //services.AddScoped<IUnitOfWork, UnitOfWork>();
             //services.AddTransient<IFicheRepository, FicheRepository>();
@@ -88,6 +100,8 @@ namespace StratomApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            //app.UseCors(x => { x.AllowAnyOrigin(); });
 
             app.UseEndpoints(endpoints =>
             {

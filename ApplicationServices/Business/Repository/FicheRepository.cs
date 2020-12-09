@@ -75,31 +75,31 @@ namespace ApplicationServices.Business.AppServices
                 .SingleOrDefaultAsync(m => m.Id == id);
         }
 
-        public async Task<Fiches> GetAllFichesByStudentId(string id)
-        {
-            try
-            {
-                return await StratomContext.Fiches.SingleOrDefaultAsync(m => m.StudentId == id);
-                //return await StratomContext.Fiches
-                //.Include(m => m.Activites)
-                //.Include(m => m.ActiviteType)
-                ////.Include(m => m.AssurancesDommage)
-                ////.Include(m => m.AssurancesPersonne)
-                //.Include(m => m.Concernes)
-                //.Include(m => m.ContratsPortefeuilles)
-                //.Include(m => m.DescriptionsActivite)
-                //.Include(m => m.FichesClientProspect)
-                //.Include(m => m.FichesContexteSimplifiee)
-                //.Include(m => m.FichesFin)
-                //.Include(m => m.Phases)
-                //.SingleOrDefaultAsync(m => m.StudentId == id);
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
+        //public async Task<Fiches> GetAllFichesByStudentId(string id)
+        //{
+        //    try
+        //    {
+        //        return await StratomContext.Fiches.SingleOrDefaultAsync(m => m.StudentId == id);
+        //        //return await StratomContext.Fiches
+        //        //.Include(m => m.Activites)
+        //        //.Include(m => m.ActiviteType)
+        //        ////.Include(m => m.AssurancesDommage)
+        //        ////.Include(m => m.AssurancesPersonne)
+        //        //.Include(m => m.Concernes)
+        //        //.Include(m => m.ContratsPortefeuilles)
+        //        //.Include(m => m.DescriptionsActivite)
+        //        //.Include(m => m.FichesClientProspect)
+        //        //.Include(m => m.FichesContexteSimplifiee)
+        //        //.Include(m => m.FichesFin)
+        //        //.Include(m => m.Phases)
+        //        //.SingleOrDefaultAsync(m => m.StudentId == id);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return null;
+        //    }
 
-        }
+        //}
         public async Task<Fiches> GetAllByNumeroFicheAsync(int etudiantId, int numeroFiche)
         {
             return await StratomContext.Fiches
@@ -140,10 +140,16 @@ namespace ApplicationServices.Business.AppServices
             objFromDb.NumeroFiche = fiche.NumeroFiche;
             StratomContext.SaveChanges();
         }
-        public void Add(Fiches fiche)
+        public int Add(Fiches fiche)
         {
             StratomContext.Fiches.Add(fiche);
             StratomContext.SaveChanges();
+            return fiche.Id;
+        }
+
+        public async Task<IEnumerable<Fiches>> GetAllFichesByStudentId(string id)
+        {
+            return await StratomContext.Fiches.Where(m => m.StudentId == id).ToListAsync();//return await _httpClient.GetJsonAsync<IEnumerable<Fiches>>("api/Fiches/?id=" + id);
         }
     }
 }

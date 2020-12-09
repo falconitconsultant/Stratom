@@ -49,7 +49,7 @@ else
                     //{
                     //    Checked = true;
                     //}
-                    <input type="checkbox" checked=@Checked value="@Text" @onchange="eventArgs => { ActivityCheckboxClicked(Value, eventArgs.Value); }" />
+                    <input type="checkbox" checked=@Checked value="@Text" @onchange="eventArgs => { ActivityTypeCheckboxClicked(Value, eventArgs.Value); }" />
                     @Text
                 }
             }
@@ -736,34 +736,11 @@ else
                 model.ficheContexteSimplifiee = new FichesContexteSimplifiee();
                 model.ficheClientProspect = new FichesClientProspect();
                 model.descriptionActivite = new DescriptionsActivite();
-
+                model.phase = new Phases();
+                model.ficheFin = new FichesFin();
                 //model.contratsPortefeuille = new ContratsPortefeuilles();
                 //model.descriptionActivite = new DescriptionsActivite();
                 model.fiche = new Fiches();
-                //model.ficheFin = new FichesFin();
-                //model.phase = new Phases();
-                //_unitOfWork.Phases.Update(model.phase);
-
-                //SetHTML();
-                //fiche = ficheList.FirstOrDefault(x => x.StudentId == loggedInUserId);
-                //NumeroFiche = "Document No. " + fiche.NumeroFiche;
-                //Set Models
-                //activite = fiche.Activites.FirstOrDefault();
-
-                //activiteType = model.activiteType.ToList();
-                //concerne = model.concerne.ToList();
-
-                //applicationUser.Nom = model.Nom;
-                //applicationUser.Prenom = model.Prenom;
-                //assuranceDommage = fiche.AssurancesDommage.FirstOrDefault();
-                //assurancePersonne = fiche.AssurancesPersonne.FirstOrDefault();
-                //concerne = fiche.Concernes.FirstOrDefault();
-                //contratsPortefeuille = fiche.ContratsPortefeuilles.FirstOrDefault();
-                //descriptionActivite = fiche.DescriptionsActivite.FirstOrDefault();
-                //ficheClientProspect = fiche.FichesClientProspect.FirstOrDefault();
-                //ficheContexteSimplifiee = fiche.FichesContexteSimplifiee.FirstOrDefault();
-                //ficheFin = fiche.FichesFin.FirstOrDefault();
-                //phase = fiche.Phases.FirstOrDefault();
                 await base.OnInitializedAsync();
             }
             catch (Exception ex)
@@ -777,36 +754,7 @@ else
             msg = "Please sign in";
         }
     }
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    if (firstRender)
-    //    {
-    //        await JSRuntime.InvokeAsync<string>("QuillFunctions.createQuill", divEditorElement);
-    //    }
-    //}
-    //async Task GetText()
-    //{
-    //    EditorHTMLContent = "";
-    //    EditorContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillText", divEditorElement);
-    //}
-    //async Task GetHTML()
-    //{
-    //    EditorHTMLContent = "";
-    //    EditorHTMLContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillHTML", divEditorElement);
-    //}
-    //async Task GetEditorContent()
-    //{
-    //    EditorHTMLContent = "";
-    //    EditorHTMLContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillContent", divEditorElement);
-    //}
-    //async Task SaveContent()
-    //{
-    //    strSavedContent = await JSRuntime.InvokeAsync<string>("QuillFunctions.getQuillContent", divEditorElement);
-    //}
-    //async Task LoadContent()
-    //{
-    //    var QuillDelta = await JSRuntime.InvokeAsync<string>("QuillFunctions.loadQuillContent", divEditorElement, strSavedContent);
-    //}
+
     public async void GetHTML()
     {
         QuillHTMLContent = await this.QuillHtml.GetHTML();
@@ -823,18 +771,7 @@ else
     {
         try
         {
-            //CommandResponse response;
-            //model.activite = activite;
-            //await  Http.SendJsonAsync(HttpMethod.Post, "https://localhost:44376/api/Fiches/Update", model);
-            //var serialized = JsonConvert.SerializeObject(model);
-            //var stringContent = new StringContent(serialized, Encoding.UTF8, "application/json");
-            //await Http.PostAsync("https://localhost:44376/api/Fiches/Update", stringContent);
-            //var request = new CommandRequest() //{RequestNumber = 3};
-            //var test = Storage.GetItem("environment_uri") + "/api/Fiches/Update";
-            //await Http.SendJsonAsync(HttpMethod.Post,  "https://localhost:44376/api/Fiches/Update", model);
-            //await Http.SendJsonAsync<MainViewModel>(HttpMethod.Post, "api/Fiches/Update", model);
-            //Running Edit function below
-            //await Http.SendJsonAsync(HttpMethod.Put, "https://localhost:44376/api/Fiches/" + model.fiche.Id, model);
+
             model.fiche.StudentId = loggedInUserId;
             //model.fiche.ActiviteTypeId =
 
@@ -918,10 +855,10 @@ else
     {
         model.fiche.ActiviteTypeId = aSelectedId;
     }
-    public void ActivityCheckboxClicked(int aSelectedId, object aChecked)
-    {
-        model.fiche.ActivitesId = aSelectedId;
-    }
+    //public void ActivityCheckboxClicked(int aSelectedId, object aChecked)
+    //{
+    //    model.fiche.ActivitesId = aSelectedId;
+    //}
     public void ConcernsCheckboxClicked(int aSelectedId, object aChecked)
     {
         model.fiche.ConcernesId = aSelectedId;
@@ -946,4 +883,6 @@ else
         StateHasChanged();
     }
 }
+
+
 

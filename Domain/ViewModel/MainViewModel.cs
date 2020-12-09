@@ -21,5 +21,6 @@ namespace Domain.ViewModel
         public FichesFin ficheFin { get; set; }
         public Phases phase { get; set; }
         public Fiches fiche { get; set; }
+        public string NumberOfDocuments {get;set;}
     }
 }

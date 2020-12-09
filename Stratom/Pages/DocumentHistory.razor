@@ -1,0 +1,184 @@
+﻿@page "/documentHistory"
+@using System.Security.Claims
+@using Domain.Entities
+@using ApplicationServices.Business.Services.IServices
+@using Microsoft.AspNetCore.Http
+@using System.IO
+@using NReco
+@using TheArtOfDev.HtmlRenderer.PdfSharp;
+@using SelectPdf;
+@using System.Net.Http
+@using DinkToPdf;
+@using DinkToPdf.Contracts;
+@using System;
+@using Stratom.Helper;
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IFicheService ficheService
+@inject HttpClient Http
+
+<h1>Document History</h1>
+
+@if (ficheList == null)
+{
+    <p><em>@msg</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in ficheList)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>
+                        <a href="https://localhost:44335/api/Fiches/CreatePDF/@item.Id" class="btn btn-primary" title="Mettre à jour" style="border-radius :50px;">
+                            @*@onclick="(() => downloadPDF(item.Id))"*@
+                            <i class="fa fa-arrow-down"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+@code {
+    private IEnumerable<Fiches> ficheList;
+    private Fiches fiche;
+    public string msg { get; set; }
+    public string loggedInUserId { get; set; }
+    public HttpClient _httpClient;
+    private IConverter _converter;
+    [Inject]
+    IJSRuntime ThisJSRuntime { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        _converter = new SynchronizedConverter(new PdfTools());
+        var principal = HttpContextAccessor.HttpContext.User;
+        loggedInUserId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (loggedInUserId != null)
+        {
+            try
+            {
+                _httpClient = new HttpClient();
+                ficheList = await ficheService.GetFicheByStudentId(loggedInUserId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+        }
+        else
+        {
+            msg = "Please sign in";
+        }
+
+    }
+
+    //public Byte[] PdfSharpConvert(String html)
+    //{
+    //    Byte[] res = null;
+    //    try
+    //    {
+    //        using (MemoryStream ms = new MemoryStream())
+    //        {
+    //            var pdf = TheArtOfDev.HtmlRenderer.PdfSharp.PdfGenerator.GeneratePdf(html, PdfSharp.PageSize.A4);
+    //            pdf.Save(ms);
+    //            res = ms.ToArray();
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //    }
+
+    //    return res;
+    //}
+    public async Task downloadPDF3(int documentID)//public byte[] CreatePDF(int id)
+    {
+        try
+        {
+            //_converter = new SynchronizedConverter(new PdfTools())
+            //{
+
+            //};
+            var globalSettings = new GlobalSettings
+            {
+                ColorMode = ColorMode.Color,
+                Orientation = Orientation.Portrait,
+                PaperSize = PaperKind.A4,
+                Margins = new MarginSettings { Top = 10 },
+                DocumentTitle = "PDF Report",
+                //Out = @"D:\PDFCreator\Employee_Report.pdf"
+            };
+            var objectSettings = new ObjectSettings
+            {
+                PagesCount = true,
+                HtmlContent = TemplateGenerator2.GetHTMLString(),
+                WebSettings = { DefaultEncoding = "utf-8", UserStyleSheet = Path.Combine(Directory.GetCurrentDirectory(), "libwkhtmltox.dll", "assets", "styles.css") },
+                HeaderSettings = { FontName = "Arial", FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+                FooterSettings = { FontName = "Arial", FontSize = 9, Line = true, Center = "Report Footer" }
+            };
+            var pdf = new HtmlToPdfDocument()
+            {
+                GlobalSettings = globalSettings,
+                Objects = { objectSettings }
+            };
+            //return _converter.Convert(pdf);
+            var file = _converter.Convert(pdf);
+            //return File(file, "application/pdf");
+            //return File(file, "application/pdf", "EmployeeReport.pdf");//"application/pdf"
+        }
+        catch (Exception ex)
+        {
+            //byte[] emp = null;
+            //return emp;
+            //return null;
+        }
+        // _converter = new IConverter();
+
+        //return Ok("Successfully created PDF document.");
+    }
+    private async Task downloadPDF(int documentID)
+    {
+        try
+        {
+
+            //fiche = (await ficheService.GetFicheById(documentID));
+
+            string html = @"    <table class='table'>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Download</th>
+        </tr>
+    </thead>
+    </table>";
+            //var htmlContent = String.Format("<body>Hello world: {0}</body>", DateTime.Now);
+            //var pdfBytes = (new NReco.PdfGenerator.HtmlToPdfConverter()).GeneratePdf(htmlContent);
+            //PdfSharpConvert(html);
+            //html = html.Replace("")
+            //_httpClient.GetJsonAsync<File[]>("api/Fiches/pdfDownloadTest/" + html);
+            await ThisJSRuntime.InvokeVoidAsync("downloadInspectionPicture", html);
+            // Code Below Running
+            //var NewResponse = await _httpClient.GetAsync("https://localhost:44335/api/Fiches/CreatePDF/2");////44335
+            //System.Net.Http.HttpContent content = NewResponse.Content; // actually a System.Net.Http.StreamContent instance but you do not need to cast as the actual type does not matter in this case
+
+            //using (var file = System.IO.File.Create("somePathHere.pdf"))
+            //{ // create a new file to write to
+            //    var contentStream = await content.ReadAsStreamAsync(); // get the actual content stream
+            //    await contentStream.CopyToAsync(file);
+            //}
+        }
+        catch (Exception ex)
+        {
+            //return null;
+        }
+    }
+
+}

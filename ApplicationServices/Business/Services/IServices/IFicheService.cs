@@ -11,7 +11,8 @@ namespace ApplicationServices.Business.Services.IServices
     {
         Task<IEnumerable<Fiches>> GetAllFiches();
         Task<MainViewModel> GetAllFichesInViewModel(string id);
-        Task<Fiches> GetFicheById(int id);        
+        Task<Fiches> GetFicheById(int id);
+        Task<IEnumerable<Fiches>> GetFicheByStudentId(string StudentID);
         Task<Fiches> CreateFiche(Fiches newFiche);
         Task UpdateFiche(Fiches ficheToBeUpdated, Fiches fiche);
         Task DeleteFiche(Fiches fiche);

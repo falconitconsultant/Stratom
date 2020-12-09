@@ -38,7 +38,10 @@ namespace Stratom.Form.Services.Services
         {
             return await _unitOfWork.Fiches.GetAllByIdAsync(id);
         }
-
+        public async Task<IEnumerable<Fiches>> GetFicheByStudentId(string StudentId)
+        {
+            return await _httpClient.GetJsonAsync<IEnumerable<Fiches>>("api/Fiches/GetAllDocuments/" + StudentId);
+        }
         public async Task<Fiches> CreateFiche(Fiches newFiche)
         {
             await _unitOfWork.Fiches.AddAsync(newFiche);
