@@ -123,6 +123,10 @@ namespace StratomApi.Controllers
             model.activiteType = await _unitOfWork.ActiviteTypes.GetAllAsync();
             model.assurancePersonne = await _unitOfWork.AssurancesPersonne.GetAllAsync();
             model.assuranceDommage = await _unitOfWork.AssurancesDommage.GetAllAsync();
+            model.ficheContexteSimplifiee = await _unitOfWork.FichesContexteSimplifiee.GetWithFichesByIdAsync(id);
+            model.ficheClientProspect = await _unitOfWork.FichesClientProspect.GetWithFichesByIdAsync(id);
+            model.descriptionActivite = await _unitOfWork.DescriptionsActivite.GetWithFichesByIdAsync(id);
+            model.phase = await _unitOfWork.Phases.GetWithFichesByIdAsync(id);
             return model;
         }
         [HttpGet]
@@ -204,10 +208,12 @@ namespace StratomApi.Controllers
                 _unitOfWork.Phases.Add(model.phase);
                 model.ficheContexteSimplifiee.FicheId = model.fiche.Id;
                 _unitOfWork.FichesContexteSimplifiee.Add(model.ficheContexteSimplifiee);
-                model.contratsPortefeuille.FicheId = model.fiche.Id;
-                _unitOfWork.ContratsPortefeuilles.Add(model.contratsPortefeuille);
+                //model.contratsPortefeuille.FicheId = model.fiche.Id;
+                //_unitOfWork.ContratsPortefeuilles.Add(model.contratsPortefeuille);
                 model.descriptionActivite.FicheId = model.fiche.Id;
                 _unitOfWork.DescriptionsActivite.Add(model.descriptionActivite);
+                //model.phase.FicheId = model.fiche.Id;
+                //_unitOfWork.Phases.Add(model.phase);
             }
         }
 

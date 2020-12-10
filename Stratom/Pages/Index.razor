@@ -209,7 +209,6 @@ else
             <input type="text" @bind="@model.ficheClientProspect.Mail" maxlength="150" class="form-control" placeholder="Mail">
             @:&nbsp;
             <input type="text" @bind="@model.ficheClientProspect.Autre" maxlength="150" class="form-control" placeholder="Autre">
-
             <h4>Situation familiale</h4>
             <br />
             <input type="text" @bind="@model.ficheClientProspect.SituationFamiliale" maxlength="150" class="form-control" placeholder="Situation Familiale">
@@ -219,12 +218,10 @@ else
             <input type="text" @bind="@model.ficheClientProspect.AgesEnfants" maxlength="150" class="form-control" placeholder="Ages Enfants">
             @:&nbsp;
             <input type="text" @bind="@model.ficheClientProspect.SituationProfessionnelle" maxlength="150" class="form-control" placeholder="Situation Professionnelle">
-
             <h4>Si client :</h4>
             <input type="checkbox" bind=@model.ficheClientProspect.IsClient @onchange="checkboxChanged" />//@onchange="eventArgs => { CheckboxClicked("IsClient", eventArgs.Value); }"
             <h4>Statut et ancienneté :</h4>
             <br />
-
             <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.Statut" maxlength="150" class="form-control" placeholder="Statut">
             @:&nbsp;
             <input type="text" disabled="@IsClientCheck" @bind="@model.ficheClientProspect.Anciennete" maxlength="150" class="form-control" placeholder="Anciennete">
@@ -356,7 +353,7 @@ else
                 @((MarkupString)ActeursImpliquésContent)
                 @ActeursImpliquésContent
             </div>
-            <BlazoredTextEditor @ref="@PhaseOne">
+            <BlazoredTextEditor @ref="@EntretienDeroulement">
                 <ToolbarContent>
                     <select class="ql-header">
                         <option selected=""></option>
@@ -771,11 +768,25 @@ else
     {
         try
         {
-
             model.fiche.StudentId = loggedInUserId;
+            //QuillHTMLContent = await this.QuillHtml.GetHTML();
+            //string test1234 = QuillHtml.GetHTML().ToString();
+            //await this.QuillHtml.GetHTML();
+            model.descriptionActivite.ContactOrigine = await this.QuillHtml.GetHTML();
+            model.descriptionActivite.ContactFonction = await this.ActeursImpliqués.GetHTML();
+            model.descriptionActivite.EntretienDeroulement = await this.EntretienDeroulement.GetHTML();
+            var test = await this.PhaseOne.GetHTML();
+            var test2 = await this.PhaseTwo.GetHTML();
+            model.phase.PhaseContact = await this.PhaseOne.GetHTML();
+            model.phase.PhaseDecouverte = await this.PhaseTwo.GetHTML();
+            model.phase.PhaseTransition = await this.PhaseThree.GetHTML();
+            model.phase.PhaseVente = await this.PhaseFour.GetHTML();
+            model.phase.PhaseConclusion = await this.PhaseFive.GetHTML();
+            model.phase.PhaseAsseoirVente = await this.PhaseSix.GetHTML();
+            model.phase.PhasePriseConge = await this.PhaseSeven.GetHTML();
             //model.fiche.ActiviteTypeId =
 
-            await Http.SendJsonAsync(HttpMethod.Post, "https://localhost:44380/api/Fiches/", model);
+            await Http.SendJsonAsync(HttpMethod.Post, "https://localhost:44335/api/Fiches/", model);//44380//44335
         }
         catch (Exception ex)
         {

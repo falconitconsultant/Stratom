@@ -28,7 +28,7 @@ namespace ApplicationServices.Business.AppServices
 
         public async Task<Phases> GetWithFichesByIdAsync(int id)
         {
-            return await StratomContext.Phases.Include(m => m.Fiche).SingleOrDefaultAsync(m => m.Id == id);
+            return await StratomContext.Phases.Include(m => m.Fiche).SingleOrDefaultAsync(m => m.FicheId == id);
         }
 
         public async Task<IEnumerable<Phases>> GetAllWithFicheByFicheIdAsync(int ficheId)

@@ -46,7 +46,7 @@ namespace Stratom
             services.AddServerSideBlazor();
             services.AddScoped<HttpClient>();
             services.AddHttpClient<IFicheService, FicheService>(client => {
-                client.BaseAddress = new Uri("https://localhost:44335/");//////44380
+                client.BaseAddress = new Uri("https://localhost:44335/");//////44380//44335
             });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
